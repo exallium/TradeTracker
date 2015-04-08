@@ -8,12 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter;
+import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapterFactory;
 
 public class ListFragment extends Fragment {
 
     private static final String SCREEN_ID = "ListFragment.screenId";
 
     private LinearLayoutManager linearLayoutManager;
+    private ViewModelAdapter viewModelAdapter;
 
     public static ListFragment createInstance(Screen screen) {
         Bundle arguments = new Bundle();
@@ -30,8 +33,9 @@ public class ListFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        // Set Adapter
-
+        Screen screen = Screen.getById(getArguments().getInt(SCREEN_ID));
+        viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen);
+        recyclerView.setAdapter(viewModelAdapter);
 
         return recyclerView;
     }

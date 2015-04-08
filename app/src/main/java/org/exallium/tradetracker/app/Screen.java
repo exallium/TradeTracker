@@ -17,4 +17,12 @@ public enum Screen {
     public int getId() {
         return id;
     }
+
+    public static Screen getById(int id) {
+        for (Screen screen : Screen.values()) {
+            if (screen.id == id)
+                return screen;
+        }
+        return NONE;
+    }
 }

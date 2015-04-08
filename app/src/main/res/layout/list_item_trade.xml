@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:padding="16dp"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="72dp">
+    <ImageView
+            android:id="@+id/trade_image"
+            android:contentDescription="@string/trade_image_description"
+            android:layout_marginRight="16dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+        <TextView
+                android:id="@+id/trade_value_count"
+                android:ellipsize="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        <TextView android:id="@+id/trade_person_cards"
+                  android:ellipsize="end"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>
