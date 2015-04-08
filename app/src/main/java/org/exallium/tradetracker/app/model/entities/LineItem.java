@@ -13,7 +13,7 @@ public class LineItem extends RealmObject {
     private UUID id;
 
     @Index
-    private String description; // Could be card signature or other item info.
+    private String description; // Could be card[id] or other item info.
 
     private long value;
 
