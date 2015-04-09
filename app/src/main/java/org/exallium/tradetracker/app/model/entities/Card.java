@@ -40,4 +40,11 @@ public class Card extends RealmObject {
         this.imageUri = imageUri;
     }
 
+    public CardSet getCardSet() {
+        return cardSet;
+    }
+
+    public void setCardSet(CardSet cardSet) {
+        this.cardSet = cardSet;
+    }
 }

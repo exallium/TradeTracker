@@ -5,6 +5,7 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import org.exallium.tradetracker.app.MainApplication;
+import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.LineItem;
 import org.exallium.tradetracker.app.model.entities.Trade;
@@ -12,6 +13,7 @@ import org.exallium.tradetracker.app.view.models.TradeViewModel;
 import rx.Observable;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,40 +42,37 @@ public abstract class Observables {
                 .map(l1 -> l1 / 100)
                 .toBlocking().last();
 
-        Realm realm = Realm.getInstance(MainApplication.getInstance());
+        Iterator<Card> cardIterator = Observable.from(trade.getLineItems())
+                .map(LineItem::getCard)
+                .distinct()
+                .filter(c -> c != null)
+                .toBlocking().getIterator();
 
-        Iterator<String> descriptions = Observable.from(trade.getLineItems()).map(LineItem::getDescription).distinct().toBlocking().getIterator();
+        Iterator<String> descIterator = Observable.from(trade.getLineItems())
+                .map(LineItem::getDescription)
+                .distinct()
+                .filter(d -> d != null)
+                .toBlocking().getIterator();
 
-        RealmQuery<Card> query = realm.allObjects(Card.class).where();
-        while (descriptions.hasNext()) {
-            String desc = descriptions.next();
-            Matcher matcher = cardNamePattern.matcher(desc);
-
-            if (!matcher.matches())
-                 continue;
-
-            int cardId = Integer.parseInt(matcher.group());
-            query.equalTo("id", cardId);
-            if (descriptions.hasNext())
-                query.or();
-        }
-
-        Card firstCard = query.findFirst();
-        Uri imageUri = firstCard == null ? Uri.EMPTY : Uri.parse(firstCard.getImageUri());
-
+        Uri imageUri = null;
         StringBuilder itemsTradedBuilder = new StringBuilder();
-        for (Card card : query.findAll()) {
-            itemsTradedBuilder.append(card.getName());
-            itemsTradedBuilder.append(',');
+
+        while (cardIterator.hasNext()) {
+            Card card = cardIterator.next();
+            if (imageUri == null)
+                imageUri = Uri.parse(card.getImageUri());
+            itemsTradedBuilder.append(String.format("%s [%s], ", card.getName(), card.getCardSet().getCode()));
         }
 
-        for (LineItem item : trade.getLineItems()) {
-            if (cardNamePattern.matcher(item.getDescription()).matches())
-                continue;
-            itemsTradedBuilder.append(item.getDescription());
-            itemsTradedBuilder.append(',');
+        while (descIterator.hasNext()) {
+            String description = descIterator.next();
+            itemsTradedBuilder.append(String.format("%s, ", description));
         }
-        itemsTradedBuilder.deleteCharAt(itemsTradedBuilder.length() - 1);
+
+        if (itemsTradedBuilder.length() > 0)
+            itemsTradedBuilder.deleteCharAt(itemsTradedBuilder.length() - 2);
+        else
+            itemsTradedBuilder.append(MainApplication.getInstance().getResources().getString(R.string.no_line_items_available));
 
         return new TradeViewModel(
                 trade.getId(),

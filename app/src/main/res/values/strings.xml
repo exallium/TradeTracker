@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">TradeTracker</string>
 
-    <!-- Content Descriptions -->
+    <!-- ImageView Content Descriptions -->
     <string name="trade_image_description">A card from the trade</string>
+
+    <!-- Error Messaging -->
+    <string name="no_line_items_available">No Items added to Trade</string>
 </resources>

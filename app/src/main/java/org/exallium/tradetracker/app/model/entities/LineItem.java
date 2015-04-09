@@ -12,8 +12,10 @@ public class LineItem extends RealmObject {
     @PrimaryKey
     private UUID id;
 
+    private String description; // Could be null or other info
+
     @Index
-    private String description; // Could be card[id] or other item info.
+    private Card card;
 
     private long value;
 
@@ -49,7 +51,13 @@ public class LineItem extends RealmObject {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
+    public void setLastUpdated(Date lastUpdated) { this.lastUpdated = lastUpdated; }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

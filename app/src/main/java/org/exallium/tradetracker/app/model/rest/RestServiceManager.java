@@ -2,6 +2,7 @@ package org.exallium.tradetracker.app.model.rest;
 
 import android.content.Context;
 import io.realm.Realm;
+import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.CardSet;
 import retrofit.RestAdapter;
@@ -47,8 +48,32 @@ public class RestServiceManager {
         });
     }
 
-    public Observable<List<Card>> getCardsForSetObservable() {
-        return null;
+    public Observable<Card> getCardsForSetObservable(final CardSet cardSet) {
+        return mtgApiRestService.getCardsForSet(cardSet.getCode()).map(m -> m.get("cards")).map(c -> {
+
+            Map<String, String> cardInfo = (Map<String, String>) c;
+
+            int id = Integer.parseInt(cardInfo.get("multiverseid"));
+
+            Realm realm = Realm.getInstance(context);
+            Card card = realm.allObjects(Card.class).where().equalTo("id", id).findFirst();
+
+            if (card == null) {
+                String name = cardInfo.get("name");
+                String imageUri = context.getResources().getString(R.string.gatherer_image_uri, id);
+                card = realm.createObject(Card.class);
+                card.setName(name);
+                card.setId(id);
+                card.setImageUri(imageUri);
+                card.setCardSet(cardSet);
+            }
+
+            return card;
+        });
+    }
+
+    public Observable<List<String>> getPriceForCardObservable(Card card) {
+        return mtgPriceRestService.getPriceInfo(card.getName(), card.getCardSet().getCode());
     }
 
 }
