@@ -13,19 +13,38 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
 import org.exallium.tradetracker.app.R;
+import org.exallium.tradetracker.app.utils.date.DateFormat;
 import org.exallium.tradetracker.app.view.models.TradeViewModel;
 import rx.Observable;
 
 public class TradeViewModelAdapter extends ViewModelAdapter<TradeViewModel> {
 
     public TradeViewModelAdapter(Observable<TradeViewModel> observable) {
-        super(observable);
+        super(observable, (lhs, rhs) -> lhs.getDate().compareTo(rhs.getDate()));
     }
 
     @Override
-    public ViewModelAdapter<TradeViewModel>.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    protected ViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
+        return new HeaderViewHolder(itemView);
+    }
+
+    @Override
+    public ViewModelAdapter<TradeViewModel>.ViewHolder onCreateModelViewHolder(ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trade, parent, false);
         return new TradeViewHolder(itemView);
+    }
+
+    class HeaderViewHolder extends ViewModelAdapter<TradeViewModel>.ViewHolder {
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void onBind(TradeViewModel viewModel) {
+            ((TextView) itemView).setText(DateFormat.toString(itemView.getResources(), viewModel.getDate()));
+        }
     }
 
     class TradeViewHolder extends ViewModelAdapter<TradeViewModel>.ViewHolder {

@@ -1,6 +1,7 @@
 package org.exallium.tradetracker.app;
 
 import android.app.Application;
+import net.danlew.android.joda.JodaTimeAndroid;
 
 public class MainApplication extends Application {
 
@@ -14,4 +15,9 @@ public class MainApplication extends Application {
         return instance;
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        JodaTimeAndroid.init(this);
+    }
 }

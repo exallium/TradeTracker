@@ -10,6 +10,7 @@ import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.LineItem;
 import org.exallium.tradetracker.app.model.entities.Trade;
 import org.exallium.tradetracker.app.view.models.TradeViewModel;
+import org.joda.time.LocalDate;
 import rx.Observable;
 
 import java.util.Iterator;
@@ -23,8 +24,11 @@ public abstract class Observables {
         final Realm realm = Realm.getInstance(MainApplication.getInstance());
 
         final RealmResults<Trade> realmResults = realm.allObjects(Trade.class);
+        realmResults.sort("tradeDate", false);
         for (Trade trade : realmResults)
             subscriber.onNext(trade);
+
+        subscriber.onCompleted();
 
     }).map(t -> {
 
@@ -74,7 +78,8 @@ public abstract class Observables {
                 trade.getPerson().getName(),
                 imageUri,
                 trade.getLineItems().size(),
-                itemsTradedBuilder.toString()
+                itemsTradedBuilder.toString(),
+                LocalDate.fromDateFields(trade.getTradeDate())
         );
     });
 

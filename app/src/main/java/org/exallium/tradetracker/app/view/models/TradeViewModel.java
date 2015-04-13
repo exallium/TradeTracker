@@ -1,6 +1,7 @@
 package org.exallium.tradetracker.app.view.models;
 
 import android.net.Uri;
+import org.joda.time.LocalDate;
 
 import java.util.UUID;
 
@@ -11,14 +12,16 @@ public class TradeViewModel extends ViewModel {
     private Uri imagePath;
     private int lineItemCount;
     private String cardsTraded;
+    private LocalDate tradeDate;
 
-    public TradeViewModel(UUID id, String formattedValue, String with, Uri imagePath, int lineItemCount, String cardsTraded) {
+    public TradeViewModel(UUID id, String formattedValue, String with, Uri imagePath, int lineItemCount, String cardsTraded, LocalDate tradeDate) {
         this.id = id;
         this.formattedValue = formattedValue;
         this.with = with;
         this.imagePath = imagePath;
         this.lineItemCount = lineItemCount;
         this.cardsTraded = cardsTraded;
+        this.tradeDate = tradeDate;
     }
 
     public UUID getId() {
@@ -43,5 +46,9 @@ public class TradeViewModel extends ViewModel {
 
     public String getCardsTraded() {
         return cardsTraded;
+    }
+
+    public LocalDate getDate() {
+        return tradeDate;
     }
 }

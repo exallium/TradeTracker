@@ -8,4 +8,8 @@
 
     <!-- Error Messaging -->
     <string name="no_line_items_available">No Items added to Trade</string>
+
+    <!-- Date -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 </resources>

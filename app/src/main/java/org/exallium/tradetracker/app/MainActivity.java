@@ -9,7 +9,9 @@ import butterknife.InjectView;
 import io.realm.Realm;
 import org.exallium.tradetracker.app.model.entities.Person;
 import org.exallium.tradetracker.app.model.entities.Trade;
+import org.joda.time.LocalDate;
 
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.UUID;
 
@@ -20,11 +22,14 @@ public class MainActivity extends Activity {
 
     @InjectView(R.id.fab) ImageButton fab;
 
+    private LocalDate localDate = LocalDate.now();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
 
         fab.setOnClickListener(v -> {
             Realm realm = Realm.getInstance(this);
@@ -41,7 +46,10 @@ public class MainActivity extends Activity {
             Trade trade = realm.createObject(Trade.class);
             trade.setUid(UUID.randomUUID().toString());
             trade.setPerson(person);
+
+            trade.setTradeDate(localDate.toDate());
             realm.commitTransaction();
+            localDate = localDate.minusDays(1);
         });
 
         showFragment(Screen.TRADES);
