@@ -40,8 +40,10 @@ public class RestServiceManager {
             CardSet set = realm.allObjects(CardSet.class).where().equalTo("code", setInfo.get("code")).findFirst();
 
             if (set == null) {
+                realm.beginTransaction();
                 set = realm.createObject(CardSet.class);
                 set.setCode(setInfo.get("code"));
+                realm.commitTransaction();
             }
 
             return set;
@@ -61,11 +63,13 @@ public class RestServiceManager {
             if (card == null) {
                 String name = cardInfo.get("name");
                 String imageUri = context.getResources().getString(R.string.gatherer_image_uri, id);
+                realm.beginTransaction();
                 card = realm.createObject(Card.class);
                 card.setName(name);
                 card.setId(id);
                 card.setImageUri(imageUri);
                 card.setCardSet(cardSet);
+                realm.commitTransaction();
             }
 
             return card;

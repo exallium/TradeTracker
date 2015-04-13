@@ -39,4 +39,16 @@ public class ListFragment extends Fragment {
 
         return recyclerView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModelAdapter.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        viewModelAdapter.onPause();
+    }
 }

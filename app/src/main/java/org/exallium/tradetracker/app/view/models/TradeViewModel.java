@@ -4,7 +4,7 @@ import android.net.Uri;
 
 import java.util.UUID;
 
-public class TradeViewModel {
+public class TradeViewModel extends ViewModel {
     private UUID id;
     private String formattedValue;
     private String with;

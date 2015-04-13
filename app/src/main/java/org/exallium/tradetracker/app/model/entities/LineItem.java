@@ -3,18 +3,19 @@ package org.exallium.tradetracker.app.model.entities;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
 import java.util.Date;
 import java.util.UUID;
 
+@RealmClass
 public class LineItem extends RealmObject {
 
     @PrimaryKey
-    private UUID id;
+    private String uid;
 
     private String description; // Could be null or other info
 
-    @Index
     private Card card;
 
     private long value;
@@ -23,12 +24,12 @@ public class LineItem extends RealmObject {
     // We should be updating the database with most recent pricing every few days
     private Date lastUpdated;
 
-    public UUID getId() {
-        return id;
+    public String getUid() {
+        return uid;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getDescription() {

@@ -3,6 +3,9 @@ package org.exallium.tradetracker.app.controller.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import io.realm.Realm;
+import org.exallium.tradetracker.app.MainApplication;
+import org.exallium.tradetracker.app.view.models.ViewModel;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -10,18 +13,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ViewModelAdapter<VM> extends RecyclerView.Adapter<ViewModelAdapter<VM>.ViewHolder> {
+public abstract class ViewModelAdapter<VM extends ViewModel> extends RecyclerView.Adapter<ViewModelAdapter<VM>.ViewHolder> {
 
     private static final String TAG = ViewModelAdapter.class.getSimpleName();
 
-    private final Observable<VM> observable;
+    private final Observable<VM> allObjectsObservable;
+
     private final List<VM> viewModels = Collections.synchronizedList(new ArrayList<>());
+    private final Realm realm = Realm.getInstance(MainApplication.getInstance());
 
     private final Subscriber<VM> vmSubscriber = new Subscriber<VM>() {
 
         @Override
         public void onCompleted() {
-            Log.d(TAG, "Subscriber onComplete called");
+            unsubscribe();
         }
 
         @Override
@@ -41,15 +46,27 @@ public abstract class ViewModelAdapter<VM> extends RecyclerView.Adapter<ViewMode
         holder.onBind(viewModels.get(position));
     }
 
-    public ViewModelAdapter(Observable<VM> observable) {
-        this.observable = observable;
+    public ViewModelAdapter(Observable<VM> allObjectsObservable) {
+        this.allObjectsObservable = allObjectsObservable;
     }
 
-    public void subscribe() {
-        observable.subscribe(vmSubscriber);
+    public void onResume() {
+        subscribe();
+        realm.addChangeListener(this::subscribe);
     }
 
-    public void unsubscribe() {
+    public void onPause() {
+        unsubscribe();
+        realm.removeChangeListener(this::subscribe);
+    }
+
+    private void subscribe() {
+        viewModels.clear();
+        notifyDataSetChanged();
+        allObjectsObservable.subscribe(vmSubscriber);
+    }
+
+    private void unsubscribe() {
         vmSubscriber.unsubscribe();
     }
 

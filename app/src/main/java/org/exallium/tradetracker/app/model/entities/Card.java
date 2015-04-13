@@ -3,7 +3,9 @@ package org.exallium.tradetracker.app.model.entities;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
+@RealmClass
 public class Card extends RealmObject {
 
     @PrimaryKey

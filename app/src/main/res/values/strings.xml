@@ -3,6 +3,8 @@
 
     <!-- ImageView Content Descriptions -->
     <string name="trade_image_description">A card from the trade</string>
+    <string name="fab_default">Add</string>
+    <string name="fab_add_trade">Add a Trade</string>
 
     <!-- Error Messaging -->
     <string name="no_line_items_available">No Items added to Trade</string>

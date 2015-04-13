@@ -3,25 +3,27 @@ package org.exallium.tradetracker.app.model.entities;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
 import java.util.Date;
 import java.util.UUID;
 
+@RealmClass
 public class Trade extends RealmObject {
 
     @PrimaryKey
-    private UUID id;
+    private String uid;
 
     private RealmList<LineItem> lineItems;
     private Person person;
     private Date tradeDate;
 
-    public UUID getId() {
-        return id;
+    public String getUid() {
+        return uid;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public Person getPerson() {

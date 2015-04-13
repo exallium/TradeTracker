@@ -28,7 +28,7 @@ public class TradeViewModelAdapter extends ViewModelAdapter<TradeViewModel> {
         return new TradeViewHolder(itemView);
     }
 
-    private class TradeViewHolder extends ViewModelAdapter<TradeViewModel>.ViewHolder {
+    class TradeViewHolder extends ViewModelAdapter<TradeViewModel>.ViewHolder {
 
         @InjectView(R.id.trade_image)       ImageView tradeImage;
         @InjectView(R.id.trade_value_count)  TextView tradeValueCount;
