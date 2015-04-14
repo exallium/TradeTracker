@@ -2,7 +2,7 @@
 
 ## Build Notes
 
-* ANDROID\_HOME, JAVA8\_HOME and JAVA7\_HOME must be set as appropriate for retrolambda
+* ANDROID\_HOME, JAVA8\_HOME and JAVA7\_HOME must be setCode as appropriate for retrolambda
 
 
 For OSX 10.10

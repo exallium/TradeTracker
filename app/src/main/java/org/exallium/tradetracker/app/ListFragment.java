@@ -5,23 +5,28 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapterFactory;
+import rx.Subscriber;
+import rx.Subscription;
 
 public class ListFragment extends Fragment {
 
     private static final String SCREEN_ID = "ListFragment.screenId";
+    private static final String BUNDLE_ID = "ListFragment.bundleId";
 
     private LinearLayoutManager linearLayoutManager;
     private ViewModelAdapter viewModelAdapter;
 
-    public static ListFragment createInstance(Screen screen) {
+    public static ListFragment createInstance(Screen screen, Bundle bundle) {
         Bundle arguments = new Bundle();
         ListFragment fragment = new ListFragment();
         arguments.putInt(SCREEN_ID, screen.getId());
+        arguments.putBundle(BUNDLE_ID, bundle);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -34,7 +39,7 @@ public class ListFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         Screen screen = Screen.getById(getArguments().getInt(SCREEN_ID));
-        viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen);
+        viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen, getArguments().getBundle(BUNDLE_ID));
         recyclerView.setAdapter(viewModelAdapter);
 
         return recyclerView;

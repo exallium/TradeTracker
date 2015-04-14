@@ -14,8 +14,9 @@
     <string name="yesterday">Yesterday</string>
 
     <!-- Drawer Nav -->
-    <string-array name="nav_items">
-        <item>Trades</item>
-        <item>Cards</item>
-    </string-array>
+    <string name="screen_trades">Trades</string>
+    <string name="screen_cards">Cards</string>
+    <string name="screen_people">People</string>
+    <string name="screen_stats">Stats</string>
+    <string name="screen_unknown">Unknown</string>
 </resources>

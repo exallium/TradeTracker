@@ -3,6 +3,7 @@ package org.exallium.tradetracker.app;
 import android.app.Application;
 import android.content.Intent;
 import net.danlew.android.joda.JodaTimeAndroid;
+import org.exallium.tradetracker.app.model.RealmManager;
 
 public class MainApplication extends Application {
 
@@ -24,5 +25,10 @@ public class MainApplication extends Application {
         Intent i = new Intent();
         i.setClass(this, CardService.class);
         startService(i);
+    }
+
+    @Override
+    public void onTerminate() {
+        RealmManager.INSTANCE.onTerminate();
     }
 }

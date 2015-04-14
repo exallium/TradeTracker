@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import io.realm.Realm;
 import org.exallium.tradetracker.app.MainApplication;
+import org.exallium.tradetracker.app.model.RealmManager;
 import org.exallium.tradetracker.app.view.models.ViewModel;
 import rx.Observable;
 import rx.Subscriber;
@@ -24,7 +25,7 @@ public abstract class ViewModelAdapter<VM extends ViewModel> extends RecyclerVie
 
     private final List<VM> viewModels = Collections.synchronizedList(new ArrayList<>());
     private final Set<Integer> headerPositions = Collections.synchronizedSet(new TreeSet<>());
-    private final Realm realm = Realm.getInstance(MainApplication.getInstance());
+    private Realm realm;
 
     private final Subscriber<VM> vmSubscriber = new Subscriber<VM>() {
 
@@ -80,6 +81,7 @@ public abstract class ViewModelAdapter<VM extends ViewModel> extends RecyclerVie
 
     public void onResume() {
         subscribe();
+        realm = RealmManager.INSTANCE.getRealm();
         realm.addChangeListener(this::subscribe);
     }
 

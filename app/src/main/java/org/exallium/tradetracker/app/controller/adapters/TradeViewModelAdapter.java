@@ -17,7 +17,11 @@ import org.exallium.tradetracker.app.utils.date.DateFormat;
 import org.exallium.tradetracker.app.view.models.TradeViewModel;
 import rx.Observable;
 
+import java.util.Comparator;
+
 public class TradeViewModelAdapter extends ViewModelAdapter<TradeViewModel> {
+
+    //private static final Comparator<TradeViewModel> comparator = (lhs, rhs) -> lhs.getDate().compareTo(rhs.getDate());
 
     public TradeViewModelAdapter(Observable<TradeViewModel> observable) {
         super(observable, (lhs, rhs) -> lhs.getDate().compareTo(rhs.getDate()));

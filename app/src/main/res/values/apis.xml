@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="gatherer_image_uri">http:\/\/gatherer.wizards.com\/Handlers\/Image.ashx?type=card&amp;multiverseid=%d</string>
-</resources>

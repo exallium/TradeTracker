@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import org.exallium.tradetracker.app.model.RealmManager;
 import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.CardSet;
 import org.exallium.tradetracker.app.model.rest.RestServiceManager;
@@ -45,12 +46,10 @@ public class CardService extends Service {
         // Output of one observable feeds as input into other observable
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(String.format("Downloading Set Info for %d sets", setDownloadCount))
                 .setContentText("This might take a while");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
 
-        restServiceManager.getCardSetObservable().subscribe(new Subscriber<CardSet>() {
+        restServiceManager.getCardSetObservable().subscribe(new Subscriber<String>() {
 
             @Override
             public void onStart() {
@@ -68,8 +67,10 @@ public class CardService extends Service {
             }
 
             @Override
-            public void onNext(CardSet cardSet) {
-                RealmResults<Card> cardResults = Realm.getInstance(CardService.this).allObjects(Card.class).where().equalTo("cardSet.code", cardSet.getCode()).findAll();
+            public void onNext(String cardSetCode) {
+                Realm realm = RealmManager.INSTANCE.getRealm();
+                CardSet cardSet = realm.allObjects(CardSet.class).where().equalTo("code", cardSetCode).findFirst();
+                RealmResults<Card> cardResults = realm.allObjects(Card.class).where().equalTo("cardSet.code", cardSetCode).findAll();
                 if (cardResults.size() != cardSet.getCount()) {
                     setDownloadCount++;
                     builder.setContentTitle(String.format("Downloading Set Info for " +  cardSet.getCode()));
