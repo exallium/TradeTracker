@@ -33,16 +33,18 @@ public class RestServiceManager {
     }
 
     public Observable<CardSet> getCardSetObservable() {
-        return mtgApiRestService.getSets().map(m -> m.get("sets")).map(s -> {
-
-            Map<String, String> setInfo = (Map<String, String>) s;
+        return mtgApiRestService.getSets().map(m -> m.get("sets")).flatMap(list ->
+            Observable.from((List) list)
+        ).map(s -> {
+            Map<String, Object> setInfo = (Map<String, Object>) s;
             Realm realm = Realm.getInstance(context);
-            CardSet set = realm.allObjects(CardSet.class).where().equalTo("code", setInfo.get("code")).findFirst();
+            CardSet set = realm.allObjects(CardSet.class).where().equalTo("code", setInfo.get("code").toString()).findFirst();
 
             if (set == null) {
                 realm.beginTransaction();
                 set = realm.createObject(CardSet.class);
-                set.setCode(setInfo.get("code"));
+                set.setCode(setInfo.get("code").toString());
+                set.setCount((int) Math.round(((Double) setInfo.get("cardCount"))));
                 realm.commitTransaction();
             }
 
@@ -51,17 +53,19 @@ public class RestServiceManager {
     }
 
     public Observable<Card> getCardsForSetObservable(final CardSet cardSet) {
-        return mtgApiRestService.getCardsForSet(cardSet.getCode()).map(m -> m.get("cards")).map(c -> {
+        return mtgApiRestService.getCardsForSet(cardSet.getCode()).map(m -> m.get("cards")).flatMap(list ->
+            Observable.from((List) list)
+        ).map(c -> {
 
-            Map<String, String> cardInfo = (Map<String, String>) c;
+            Map<String, Object> cardInfo = (Map<String, Object>) c;
 
-            int id = Integer.parseInt(cardInfo.get("multiverseid"));
+            int id = (int) Math.round((Double) cardInfo.get("multiverseid"));
 
             Realm realm = Realm.getInstance(context);
             Card card = realm.allObjects(Card.class).where().equalTo("id", id).findFirst();
 
             if (card == null) {
-                String name = cardInfo.get("name");
+                String name = cardInfo.get("name").toString();
                 String imageUri = context.getResources().getString(R.string.gatherer_image_uri, id);
                 realm.beginTransaction();
                 card = realm.createObject(Card.class);

@@ -8,7 +8,6 @@ import io.realm.annotations.RealmClass;
 @RealmClass
 public class Card extends RealmObject {
 
-    @PrimaryKey
     private int id;
 
     private CardSet cardSet;

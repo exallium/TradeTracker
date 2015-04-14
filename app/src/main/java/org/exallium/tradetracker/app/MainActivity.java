@@ -3,10 +3,15 @@ package org.exallium.tradetracker.app;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.RadioGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.realm.Realm;
+import org.exallium.tradetracker.app.controller.adapters.DrawerNavAdapter;
 import org.exallium.tradetracker.app.model.entities.Person;
 import org.exallium.tradetracker.app.model.entities.Trade;
 import org.joda.time.LocalDate;
@@ -21,6 +26,7 @@ public class MainActivity extends Activity {
     private final EnumMap<Screen, ListFragment> fragmentMap = new EnumMap<>(Screen.class);
 
     @InjectView(R.id.fab) ImageButton fab;
+    @InjectView(R.id.left_drawer) RecyclerView leftDrawer;
 
     private LocalDate localDate = LocalDate.now();
 
@@ -30,6 +36,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
+        leftDrawer.setLayoutManager(new LinearLayoutManager(this));
+        leftDrawer.setAdapter(new DrawerNavAdapter(getResources().getStringArray(R.array.nav_items)));
 
         fab.setOnClickListener(v -> {
             Realm realm = Realm.getInstance(this);

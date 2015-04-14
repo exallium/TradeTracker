@@ -12,4 +12,10 @@
     <!-- Date -->
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+
+    <!-- Drawer Nav -->
+    <string-array name="nav_items">
+        <item>Trades</item>
+        <item>Cards</item>
+    </string-array>
 </resources>

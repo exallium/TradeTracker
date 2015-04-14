@@ -1,6 +1,7 @@
 package org.exallium.tradetracker.app;
 
 import android.app.Application;
+import android.content.Intent;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 public class MainApplication extends Application {
@@ -19,5 +20,9 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         JodaTimeAndroid.init(this);
+
+        Intent i = new Intent();
+        i.setClass(this, CardService.class);
+        startService(i);
     }
 }
