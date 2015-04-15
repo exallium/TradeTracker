@@ -70,13 +70,16 @@ public class MainActivity extends Activity {
     }
 
     private void showFragment(Screen screen, Bundle bundle) {
-
         if (screen != currentScreen) {
-
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, ListFragment.createInstance(screen, bundle));
+            switch(screen) {
+                case TRADE:
+                    transaction.replace(R.id.fragment_container, TradeFragment.createInstance(bundle));
+                    break;
+                default:
+                    transaction.replace(R.id.fragment_container, ListFragment.createInstance(screen, bundle));
+            }
             transaction.commit();
-
             currentScreen = screen;
         }
     }

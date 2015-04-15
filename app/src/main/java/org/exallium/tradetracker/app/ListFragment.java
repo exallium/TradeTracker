@@ -16,17 +16,14 @@ import rx.Subscription;
 
 public class ListFragment extends Fragment {
 
-    private static final String SCREEN_ID = "ListFragment.screenId";
-    private static final String BUNDLE_ID = "ListFragment.bundleId";
-
     private LinearLayoutManager linearLayoutManager;
     private ViewModelAdapter viewModelAdapter;
 
     public static ListFragment createInstance(Screen screen, Bundle bundle) {
         Bundle arguments = new Bundle();
         ListFragment fragment = new ListFragment();
-        arguments.putInt(SCREEN_ID, screen.getId());
-        arguments.putBundle(BUNDLE_ID, bundle);
+        arguments.putInt(Screen.SCREEN_ID, screen.getId());
+        arguments.putBundle(Screen.BUNDLE_ID, bundle);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -38,8 +35,8 @@ public class ListFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        Screen screen = Screen.getById(getArguments().getInt(SCREEN_ID));
-        viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen, getArguments().getBundle(BUNDLE_ID));
+        Screen screen = Screen.getById(getArguments().getInt(Screen.SCREEN_ID));
+        viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen, getArguments().getBundle(Screen.BUNDLE_ID));
         recyclerView.setAdapter(viewModelAdapter);
 
         return recyclerView;

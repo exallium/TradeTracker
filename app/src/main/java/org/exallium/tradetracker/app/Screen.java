@@ -2,12 +2,17 @@ package org.exallium.tradetracker.app;
 
 
 public enum Screen {
+
     NONE(0, R.string.screen_unknown),
     TRADES(1, R.string.screen_trades),
     CARD_SETS(2, R.string.screen_cards),
     PEOPLE(3, R.string.screen_people),
     STATS(4, R.string.screen_stats),
-    CARDS(5, R.string.screen_cards);
+    CARDS(5, R.string.screen_cards),
+    TRADE(6, R.string.screen_trades);
+
+    public static final String SCREEN_ID = "screenId";
+    public static final String BUNDLE_ID = "bundleId";
 
     private final int id;
     private final int nameRes;
