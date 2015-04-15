@@ -7,6 +7,8 @@ import org.exallium.tradetracker.app.model.RealmManager;
 
 public class MainApplication extends Application {
 
+    public static final String PREFERENCES = "org.exallium.tradetracker.prefs";
+
     private static MainApplication instance;
 
     {
