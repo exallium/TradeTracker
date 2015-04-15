@@ -63,8 +63,8 @@ public class CardService extends Service {
 
         if (getSharedPreferences(MainApplication.PREFERENCES, Context.MODE_PRIVATE).getBoolean(PREFS_REQUIRE_DISK_UPDATE, true))
             doDiskLoad();
-        else
-            doWebLoad();
+        //else
+        //    doWebLoad();
 
     }
 
@@ -111,10 +111,14 @@ public class CardService extends Service {
                 reader.endArray();
                 reader.beginArray();
 
+                CardSet cardSet = null;
                 List<Card> cards = new ArrayList<>();
                 while (reader.hasNext()) {
                     CardJsonObject cardJsonObject = gson.fromJson(reader, CardJsonObject.class);
-                    CardSet cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardJsonObject.set)).first();
+
+                    if (cardSet == null || !cardSet.code.equals(cardJsonObject.set))
+                        cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardJsonObject.set)).first();
+
                     Card card = Select.from(Card.class)
                             .where(Condition.prop("card_set").eq(cardSet.getId()), Condition.prop("name").eq(cardJsonObject.name))
                             .first();
@@ -153,7 +157,7 @@ public class CardService extends Service {
 
         getSharedPreferences(MainApplication.PREFERENCES, Context.MODE_PRIVATE)
             .edit().putBoolean(PREFS_REQUIRE_DISK_UPDATE, false).apply();
-        doWebLoad();
+        //doWebLoad();
     }
 
     private void doWebLoad(){

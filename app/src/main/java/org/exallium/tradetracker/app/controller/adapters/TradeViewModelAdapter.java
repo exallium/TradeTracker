@@ -15,9 +15,11 @@ import com.squareup.picasso.Picasso;
 import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.utils.date.DateFormat;
 import org.exallium.tradetracker.app.view.models.TradeViewModel;
+import org.exallium.tradetracker.app.view.transformations.CircleTransformation;
+import org.exallium.tradetracker.app.view.transformations.MTGCardCropTransformation;
 import rx.Observable;
 
-import java.util.Comparator;
+import java.util.Arrays;
 
 public class TradeViewModelAdapter extends ViewModelAdapter<TradeViewModel> {
 
@@ -68,6 +70,7 @@ public class TradeViewModelAdapter extends ViewModelAdapter<TradeViewModel> {
             // TODO: Circular Mask Clipping
             Picasso.with(tradeImage.getContext())
                     .load(viewModel.getImagePath())
+                    .transform(Arrays.asList(new MTGCardCropTransformation(), new CircleTransformation()))
                     .into(tradeImage);
 
             tradeValueCount.setText(String.format("%s with %d items traded", viewModel.getFormattedValue(), viewModel.getLineItemCount()));
