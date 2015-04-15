@@ -26,7 +26,6 @@ import java.util.UUID;
 public class MainActivity extends Activity {
 
     private Screen currentScreen = Screen.NONE;
-    private final EnumMap<Screen, ListFragment> fragmentMap = new EnumMap<>(Screen.class);
 
     @InjectView(R.id.fab) ImageButton fab;
     @InjectView(R.id.left_drawer) RecyclerView leftDrawer;
@@ -78,12 +77,9 @@ public class MainActivity extends Activity {
     private void showFragment(Screen screen, Bundle bundle) {
 
         if (screen != currentScreen) {
-            if (!fragmentMap.containsKey(screen)) {
-                fragmentMap.put(screen, ListFragment.createInstance(screen, bundle));
-            }
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, fragmentMap.get(screen));
+            transaction.replace(R.id.fragment_container, ListFragment.createInstance(screen, bundle));
             transaction.commit();
 
             currentScreen = screen;
