@@ -9,9 +9,14 @@ import org.exallium.tradetracker.app.view.models.CardSetViewModel;
 import org.exallium.tradetracker.app.view.models.CardViewModel;
 import rx.Observable;
 
+import java.util.Comparator;
+
 public class CardViewModelAdapter extends ViewModelAdapter<CardViewModel> {
+
+    private final static Comparator<CardViewModel> comparator = ((lhs, rhs) -> lhs.getSetCode().substring(0,1).compareTo(rhs.getSetCode().substring(0,1)));
+
     public CardViewModelAdapter(Observable<CardViewModel> allObjectsObservable) {
-        super(allObjectsObservable, ((lhs, rhs) -> lhs.getName().substring(0,1).compareTo(rhs.getName().substring(0, 1))));
+        super(allObjectsObservable, comparator);
     }
 
     @Override
