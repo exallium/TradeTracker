@@ -15,6 +15,8 @@ import org.exallium.tradetracker.app.model.entities.CardSet;
 import org.exallium.tradetracker.app.model.rest.RestServiceManager;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
+import rx.functions.Action0;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,8 +24,6 @@ import java.util.concurrent.TimeUnit;
 public class CardService extends Service {
 
     private static final int NOTIFICATION_ID = 1;
-
-    private int setDownloadCount = 0;
 
     private RestServiceManager restServiceManager;
 
@@ -71,20 +71,45 @@ public class CardService extends Service {
                 Realm realm = RealmManager.INSTANCE.getRealm();
                 CardSet cardSet = realm.allObjects(CardSet.class).where().equalTo("code", cardSetCode).findFirst();
                 RealmResults<Card> cardResults = realm.allObjects(Card.class).where().equalTo("cardSet.code", cardSetCode).findAll();
+
                 if (cardResults.size() != cardSet.getCount()) {
-                    setDownloadCount++;
-                    builder.setContentTitle(String.format("Downloading Set Info for " +  cardSet.getCode()));
+                    int page = 1;
+                    int pageCount = (int) Math.round(Math.ceil(cardSet.getCount() / 20.0f));
+
+                    builder.setContentTitle(String.format("Downloading Page %d/%d of " + cardSet.getCode(), page, pageCount));
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
-                    restServiceManager.getCardsForSetObservable(cardSet).doOnCompleted(() -> {
+
+                    restServiceManager.getCardsForSetObservable(cardSet, 1).doOnCompleted(new OnCardPageDownloadedAction(cardSet.getCode(), page, pageCount)).subscribe();
+                } else {
+                    request(1);
+                }
+
+            }
+
+            class OnCardPageDownloadedAction implements Action0 {
+
+                final int page;
+                final int total;
+                final String cardSetCode;
+
+                OnCardPageDownloadedAction(String cardSetCode, int page, int total) {
+                    this.page = page;
+                    this.total = total;
+                    this.cardSetCode = cardSetCode;
+                }
+
+                @Override
+                public void call() {
+                    if (page != total) {
+                        Realm realm = RealmManager.INSTANCE.getRealm();
+                        CardSet cardSet = realm.allObjects(CardSet.class).where().equalTo("code", cardSetCode).findFirst();
+                        restServiceManager.getCardsForSetObservable(cardSet, page).doOnCompleted(new OnCardPageDownloadedAction(cardSetCode, page + 1, total)).subscribe();
+                        builder.setContentTitle(String.format("Downloading Page %d/%d of " + cardSetCode, page + 1, total));
+                        notificationManager.notify(NOTIFICATION_ID, builder.build());
+                    } else {
+                        notificationManager.cancel(NOTIFICATION_ID);
                         request(1);
-                        setDownloadCount--;
-                        if (setDownloadCount != 0) {
-                            builder.setContentTitle(String.format("Downloading Set Info for " + cardSet.getCode()));
-                            notificationManager.notify(NOTIFICATION_ID, builder.build());
-                        } else {
-                            notificationManager.cancel(NOTIFICATION_ID);
-                        }
-                    }).subscribe();
+                    }
                 }
             }
         });
@@ -95,4 +120,5 @@ public class CardService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
     }
+
 }

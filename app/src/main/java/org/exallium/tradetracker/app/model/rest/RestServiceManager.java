@@ -55,9 +55,9 @@ public class RestServiceManager {
         });
     }
 
-    public Observable<CardSet> getCardsForSetObservable(final CardSet cardSet) {
+    public Observable<CardSet> getCardsForSetObservable(final CardSet cardSet, final int page) {
         final String setCode = cardSet.getCode();
-        return mtgApiRestService.getCardsForSet(setCode).map(m -> m.get("cards")).flatMap(list ->
+        return mtgApiRestService.getCardsForSet(setCode, page).map(m -> m.get("cards")).flatMap(list ->
             Observable.from((List) list)
         ).map(c -> {
 

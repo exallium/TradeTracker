@@ -9,7 +9,7 @@ import java.util.Map;
 public interface MtgApiRestService {
 
     @GET("/cards")
-    Observable<Map<String, Object>> getCardsForSet(@Query("set") String setCode);
+    Observable<Map<String, Object>> getCardsForSet(@Query("set") String setCode, @Query("page") int page);
 
     @GET("/sets")
     Observable<Map<String, Object>> getSets();
