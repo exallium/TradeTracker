@@ -1,5 +1,6 @@
 package org.exallium.tradetracker.app.controller.adapters;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -26,7 +27,8 @@ public class DrawerNavAdapter extends RecyclerView.Adapter<DrawerNavAdapter.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
+        TextView view = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
+        view.setTextColor(Color.WHITE);
         return new ViewHolder(view);
     }
 

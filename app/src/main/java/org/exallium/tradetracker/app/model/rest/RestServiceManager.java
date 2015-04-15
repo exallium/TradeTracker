@@ -64,11 +64,9 @@ public class RestServiceManager {
             Card card = Select.from(Card.class).where(Condition.prop("uuid").eq(cardId.toString())).first();
 
             if (card == null) {
-                String imageUri = ((Map<String, Object>) cardInfo.get("images")).get("mtgimage").toString();
                 card = new Card();
                 card.name = name;
                 card.uuid = cardId.toString();
-                card.imageUri = imageUri;
                 card.cardSet = cardSet;
             }
 

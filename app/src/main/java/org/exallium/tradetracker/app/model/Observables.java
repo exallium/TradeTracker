@@ -62,7 +62,7 @@ public abstract class Observables {
 
         Trade trade = (Trade) t;
 
-        List<LineItem> lineItems = Select.from(LineItem.class).where(Condition.prop("trade").eq(trade)).list();
+        List<LineItem> lineItems = Select.from(LineItem.class).where(Condition.prop("trade").eq(trade.getId())).list();
 
         long value = lineItems.isEmpty() ? 0 : Observable.from(lineItems)
                 .map(lineItem -> lineItem.value)
@@ -87,8 +87,8 @@ public abstract class Observables {
 
         while (cardIterator.hasNext()) {
             Card card = cardIterator.next();
-            if (imageUri == null)
-                imageUri = Uri.parse(card.imageUri);
+            if (imageUri == null && card.multiverseId != -1)
+                imageUri = Uri.parse("http://gatherer.wizards.com/handlers/image.ashx/?type=card&multiverseid=" + card.multiverseId);
             itemsTradedBuilder.append(String.format("%s [%s], ", card.name, card.cardSet.code));
         }
 

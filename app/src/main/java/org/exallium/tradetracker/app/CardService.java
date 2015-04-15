@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CardService extends Service {
 
@@ -34,6 +35,7 @@ public class CardService extends Service {
     private RestServiceManager restServiceManager;
 
     private class CardJsonObject {
+        int multiverseId;
         String name;
         String set;
     }
@@ -121,6 +123,8 @@ public class CardService extends Service {
                         card = new Card();
                         card.cardSet = cardSet;
                         card.name = cardJsonObject.name;
+                        card.multiverseId = cardJsonObject.multiverseId;
+                        card.uuid = UUID.nameUUIDFromBytes(String.format("%s[%s]", cardJsonObject.name, cardSet.code).getBytes()).toString();
                         cards.add(card);
                     }
                 }

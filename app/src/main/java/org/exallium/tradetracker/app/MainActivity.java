@@ -39,6 +39,8 @@ public class MainActivity extends Activity {
         leftDrawer.setLayoutManager(new LinearLayoutManager(this));
         leftDrawer.setAdapter(new DrawerNavAdapter(new Screen[]{Screen.TRADES, Screen.CARD_SETS}, fragmentRequestSubscriber));
 
+        Trade.deleteAll(Trade.class);
+
         fab.setOnClickListener(v -> {
             Person person = Select.from(Person.class).where(Condition.prop("name").eq("Alex")).first();
             if (person == null) {
@@ -47,7 +49,7 @@ public class MainActivity extends Activity {
                 person.save();
             }
 
-            Card card = Select.from(Card.class).where(Condition.prop("name").like("%Stoneforge%")).first();
+            Card card = Select.from(Card.class).where(Condition.prop("name").eq("Stoneforge Mystic")).first();
             LineItem lineItem = new LineItem();
             lineItem.value = 3500;
             lineItem.lastUpdated = LocalDate.now().toDate();
@@ -55,7 +57,7 @@ public class MainActivity extends Activity {
 
             Trade trade = new Trade();
             trade.person = person;
-            trade.tradeDate = LocalDate.now().toDate();
+            trade.tradeDate = localDate.toDate();
             trade.save();
 
             lineItem.trade = trade;
