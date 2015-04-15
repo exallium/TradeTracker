@@ -12,13 +12,17 @@ import org.exallium.tradetracker.app.view.models.CardSetViewModel;
 import rx.Observable;
 import rx.Subscriber;
 
+import java.util.Comparator;
+
 public class CardSetViewModelAdapter extends ViewModelAdapter<CardSetViewModel> {
 
     private Subscriber<Pair<Screen, Bundle>> subscriber = null;
     private final Observable<Pair<Screen, Bundle>> onNavigationClickedObservable = Observable.create(subscriber -> this.subscriber = (Subscriber<Pair<Screen, Bundle>>) subscriber);
 
+    private final static Comparator<CardSetViewModel> comparator = ((lhs, rhs) -> lhs.getCode().substring(0,1).compareTo(rhs.getCode().substring(0,1)));
+
     public CardSetViewModelAdapter(Observable<CardSetViewModel> allObjectsObservable) {
-        super(allObjectsObservable, ((lhs, rhs) -> lhs.getCode().substring(0,1).compareTo(rhs.getCode().substring(0,1))));
+        super(allObjectsObservable, comparator);
         onNavigationClickedObservable.subscribe(ViewModelAdapterFactory.adapterSubject);
     }
 

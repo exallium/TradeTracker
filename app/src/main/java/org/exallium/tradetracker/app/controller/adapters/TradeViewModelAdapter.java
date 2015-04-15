@@ -20,13 +20,14 @@ import org.exallium.tradetracker.app.view.transformations.MTGCardCropTransformat
 import rx.Observable;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class TradeViewModelAdapter extends ViewModelAdapter<TradeViewModel> {
 
-    //private static final Comparator<TradeViewModel> comparator = (lhs, rhs) -> lhs.getDate().compareTo(rhs.getDate());
+    private static final Comparator<TradeViewModel> comparator = (lhs, rhs) -> lhs.getDate().compareTo(rhs.getDate());
 
     public TradeViewModelAdapter(Observable<TradeViewModel> observable) {
-        super(observable, (lhs, rhs) -> lhs.getDate().compareTo(rhs.getDate()));
+        super(observable, comparator);
     }
 
     @Override

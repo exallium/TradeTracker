@@ -24,7 +24,10 @@ public abstract class ViewModelAdapter<VM extends ViewModel> extends RecyclerVie
     private final List<VM> viewModels = Collections.synchronizedList(new ArrayList<>());
     private final Set<Integer> headerPositions = Collections.synchronizedSet(new TreeSet<>());
 
-    private final Subscriber<Object> onObjectSavedSubscriber = new Subscriber<Object>() {
+    private SugarUpdateSubscriber currentUpdateSubscriber = null;
+    private ViewModelSubscriber currentViewModelSubscriber = null;
+
+    private final class SugarUpdateSubscriber extends Subscriber<Object> {
         @Override
         public void onCompleted() {
 
@@ -41,7 +44,7 @@ public abstract class ViewModelAdapter<VM extends ViewModel> extends RecyclerVie
         }
     };
 
-    private final Subscriber<VM> vmSubscriber = new Subscriber<VM>() {
+     private final class ViewModelSubscriber extends Subscriber<VM> {
 
         @Override
         public void onCompleted() {
@@ -95,23 +98,28 @@ public abstract class ViewModelAdapter<VM extends ViewModel> extends RecyclerVie
 
     public void onResume() {
         subscribe();
-        MainApplication.onObjectSavedSubject.subscribe(onObjectSavedSubscriber);
+        currentUpdateSubscriber = new SugarUpdateSubscriber();
+        MainApplication.onObjectSavedSubject.subscribe(currentUpdateSubscriber);
     }
 
     public void onPause() {
         unsubscribe();
-        onObjectSavedSubscriber.unsubscribe();
+
+        if (currentUpdateSubscriber != null)
+            currentUpdateSubscriber.unsubscribe();
     }
 
     private void subscribe() {
         viewModels.clear();
         headerPositions.clear();
         notifyDataSetChanged();
-        allObjectsObservable.subscribe(vmSubscriber);
+        currentViewModelSubscriber = new ViewModelSubscriber();
+        allObjectsObservable.subscribe(currentViewModelSubscriber);
     }
 
     private void unsubscribe() {
-        vmSubscriber.unsubscribe();
+        if (currentViewModelSubscriber != null)
+            currentViewModelSubscriber.unsubscribe();
     }
 
     @Override
