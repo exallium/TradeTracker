@@ -1,9 +1,8 @@
 package org.exallium.tradetracker.app.model.rest;
 
 import android.content.Context;
-import io.realm.Realm;
-import org.exallium.tradetracker.app.R;
-import org.exallium.tradetracker.app.model.RealmManager;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.CardSet;
 import retrofit.RestAdapter;
@@ -40,15 +39,12 @@ public class RestServiceManager {
         ).map(s -> {
             Map<String, Object> setInfo = (Map<String, Object>) s;
             String setCode = setInfo.get("code").toString();
-            Realm realm = RealmManager.INSTANCE.getRealm();
-            CardSet set = realm.allObjects(CardSet.class).where().equalTo("code", setInfo.get("code").toString()).findFirst();
+            CardSet set = Select.from(CardSet.class).where(Condition.prop("code").eq(setInfo.get("code").toString())).first();
 
             if (set == null) {
-                realm.beginTransaction();
-                set = realm.createObject(CardSet.class);
-                set.setCode(setInfo.get("code").toString());
-                set.setCount((int) Math.round(((Double) setInfo.get("cardCount"))));
-                realm.commitTransaction();
+                set = new CardSet();
+                set.code = setInfo.get("code").toString();
+                set.count = (int) Math.round(((Double) setInfo.get("cardCount")));
             }
 
             return setCode;
@@ -56,7 +52,7 @@ public class RestServiceManager {
     }
 
     public Observable<CardSet> getCardsForSetObservable(final CardSet cardSet, final int page) {
-        final String setCode = cardSet.getCode();
+        final String setCode = cardSet.code;
         return mtgApiRestService.getCardsForSet(setCode, page).map(m -> m.get("cards")).flatMap(list ->
             Observable.from((List) list)
         ).map(c -> {
@@ -65,18 +61,15 @@ public class RestServiceManager {
 
             String name = cardInfo.get("name").toString();
             UUID cardId = UUID.nameUUIDFromBytes(String.format("%s[%s]", name, setCode).getBytes());
-            Realm realm = RealmManager.INSTANCE.getRealm();
-            Card card = realm.allObjects(Card.class).where().equalTo("id", cardId.toString()).findFirst();
+            Card card = Select.from(Card.class).where(Condition.prop("uuid").eq(cardId.toString())).first();
 
             if (card == null) {
                 String imageUri = ((Map<String, Object>) cardInfo.get("images")).get("mtgimage").toString();
-                realm.beginTransaction();
-                card = realm.createObject(Card.class);
-                card.setName(name);
-                card.setId(cardId.toString());
-                card.setImageUri(imageUri);
-                card.setCardSet(cardSet);
-                realm.commitTransaction();
+                card = new Card();
+                card.name = name;
+                card.uuid = cardId.toString();
+                card.imageUri = imageUri;
+                card.cardSet = cardSet;
             }
 
             return cardSet;
@@ -84,7 +77,7 @@ public class RestServiceManager {
     }
 
     public Observable<List<String>> getPriceForCardObservable(Card card) {
-        return mtgPriceRestService.getPriceInfo(card.getName(), card.getCardSet().getCode());
+        return mtgPriceRestService.getPriceInfo(card.name, card.cardSet.code);
     }
 
 }

@@ -1,11 +1,15 @@
 package org.exallium.tradetracker.app;
 
-import android.app.Application;
 import android.content.Intent;
+import com.orm.SugarApp;
 import net.danlew.android.joda.JodaTimeAndroid;
 import org.exallium.tradetracker.app.model.RealmManager;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
 
-public class MainApplication extends Application {
+public class MainApplication extends SugarApp {
+
+    public static final Subject<Object, Object> onObjectSavedSubject = PublishSubject.create();
 
     public static final String PREFERENCES = "org.exallium.tradetracker.prefs";
 
@@ -32,5 +36,9 @@ public class MainApplication extends Application {
     @Override
     public void onTerminate() {
         RealmManager.INSTANCE.onTerminate();
+    }
+
+    public void onObjectSaved(Object object) {
+        onObjectSavedSubject.onNext(object);
     }
 }

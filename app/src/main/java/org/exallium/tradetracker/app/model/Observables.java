@@ -1,8 +1,8 @@
 package org.exallium.tradetracker.app.model;
 
 import android.net.Uri;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 import org.exallium.tradetracker.app.MainApplication;
 import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.model.entities.Card;
@@ -16,7 +16,7 @@ import org.joda.time.LocalDate;
 import rx.Observable;
 
 import java.util.Iterator;
-import java.util.UUID;
+import java.util.List;
 
 public abstract class Observables {
 
@@ -26,12 +26,12 @@ public abstract class Observables {
     public static Observable<CardViewModel> getCardObservable(String cardSetCode) {
         return Observable.create(subscriber -> {
 
-            final Realm realm = RealmManager.INSTANCE.getRealm();
-            final RealmResults<Card> cards = realm.allObjects(Card.class).where().equalTo("cardSet.code", cardSetCode).findAll();
-            cards.sort("name");
+            final List<Card> cards = Select.from(Card.class)
+                    .where(Condition.prop("cardSet.code").eq(cardSetCode))
+                    .orderBy("name").list();
 
             for (Card card : cards) {
-                subscriber.onNext(new CardViewModel(card.getName(), cardSetCode));
+                subscriber.onNext(new CardViewModel(card.name, cardSetCode));
             }
 
             subscriber.onCompleted();
@@ -41,12 +41,9 @@ public abstract class Observables {
 
     private static Observable<CardSetViewModel> cardSetObservable = Observable.create(subscriber -> {
 
-        final Realm realm = RealmManager.INSTANCE.getRealm();
-
-        final RealmResults<CardSet> cardSets = realm.allObjects(CardSet.class);
-        cardSets.sort("code");
+        final List<CardSet> cardSets = Select.from(CardSet.class).orderBy("code").list();
         for (CardSet cardSet : cardSets) {
-            subscriber.onNext(new CardSetViewModel(cardSet.getCode()));
+            subscriber.onNext(new CardSetViewModel(cardSet.code));
         }
 
         subscriber.onCompleted();
@@ -54,11 +51,8 @@ public abstract class Observables {
 
     private static Observable<TradeViewModel> tradeObservable = Observable.create(subscriber -> {
 
-        final Realm realm = RealmManager.INSTANCE.getRealm();
-
-        final RealmResults<Trade> realmResults = realm.allObjects(Trade.class);
-        realmResults.sort("tradeDate", false);
-        for (Trade trade : realmResults)
+        final List<Trade> trades = Select.from(Trade.class).orderBy("tradeDate").list();
+        for (Trade trade : trades)
             subscriber.onNext(trade);
 
         subscriber.onCompleted();
@@ -67,20 +61,22 @@ public abstract class Observables {
 
         Trade trade = (Trade) t;
 
-        long value = trade.getLineItems().isEmpty() ? 0 : Observable.from(trade.getLineItems())
-                .map(LineItem::getValue)
+        List<LineItem> lineItems = Select.from(LineItem.class).where(Condition.prop("trade").eq(trade)).list();
+
+        long value = lineItems.isEmpty() ? 0 : Observable.from(lineItems)
+                .map(lineItem -> lineItem.value)
                 .reduce((l1, l2) -> l1 + l2)
                 .map(l1 -> l1 / 100)
                 .toBlocking().last();
 
-        Iterator<Card> cardIterator = Observable.from(trade.getLineItems())
-                .map(LineItem::getCard)
+        Iterator<Card> cardIterator = Observable.from(lineItems)
+                .map(lineItem -> lineItem.card)
                 .filter(c -> c != null)
-                .distinct(Card::getName)
+                .distinct(card1 -> card1.name)
                 .toBlocking().getIterator();
 
-        Iterator<String> descIterator = Observable.from(trade.getLineItems())
-                .map(LineItem::getDescription)
+        Iterator<String> descIterator = Observable.from(lineItems)
+                .map(lineItem -> lineItem.description)
                 .filter(d -> d != null)
                 .distinct()
                 .toBlocking().getIterator();
@@ -91,8 +87,8 @@ public abstract class Observables {
         while (cardIterator.hasNext()) {
             Card card = cardIterator.next();
             if (imageUri == null)
-                imageUri = Uri.parse(card.getImageUri());
-            itemsTradedBuilder.append(String.format("%s [%s], ", card.getName(), card.getCardSet().getCode()));
+                imageUri = Uri.parse(card.imageUri);
+            itemsTradedBuilder.append(String.format("%s [%s], ", card.name, card.cardSet.code));
         }
 
         while (descIterator.hasNext()) {
@@ -106,13 +102,13 @@ public abstract class Observables {
             itemsTradedBuilder.append(MainApplication.getInstance().getResources().getString(R.string.no_line_items_available));
 
         return new TradeViewModel(
-                UUID.fromString(trade.getUid()),
+                trade.getId(),
                 String.format("%c%d", value >= 0 ? '+' : '-', value),
-                trade.getPerson().getName(),
+                trade.person.name,
                 imageUri,
-                trade.getLineItems().size(),
+                lineItems.size(),
                 itemsTradedBuilder.toString(),
-                LocalDate.fromDateFields(trade.getTradeDate())
+                LocalDate.fromDateFields(trade.tradeDate)
         );
     });
 

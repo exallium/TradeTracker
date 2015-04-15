@@ -18,6 +18,12 @@
         <service android:name=".CardService">
 
         </service>
+
+        <meta-data android:name="DATABASE" android:value="tradetracker.db" />
+        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="org.exallium.tradetracker.app.model.entities" />
+
     </application>
 
 </manifest>

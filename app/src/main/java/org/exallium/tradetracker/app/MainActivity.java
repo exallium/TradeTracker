@@ -9,19 +9,16 @@ import android.util.Pair;
 import android.widget.ImageButton;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import io.realm.Realm;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 import org.exallium.tradetracker.app.controller.adapters.DrawerNavAdapter;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapterFactory;
-import org.exallium.tradetracker.app.model.RealmManager;
 import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.LineItem;
 import org.exallium.tradetracker.app.model.entities.Person;
 import org.exallium.tradetracker.app.model.entities.Trade;
 import org.joda.time.LocalDate;
 import rx.Subscriber;
-
-import java.util.EnumMap;
-import java.util.UUID;
 
 public class MainActivity extends Activity {
 
@@ -43,31 +40,27 @@ public class MainActivity extends Activity {
         leftDrawer.setAdapter(new DrawerNavAdapter(new Screen[]{Screen.TRADES, Screen.CARD_SETS}, fragmentRequestSubscriber));
 
         fab.setOnClickListener(v -> {
-            Realm realm = RealmManager.INSTANCE.getRealm();
-
-            realm.beginTransaction();
-            Person person = realm.allObjects(Person.class).where()
-                    .equalTo("name", "Alex")
-                    .findFirst();
+            Person person = Select.from(Person.class).where(Condition.prop("name").eq("Alex")).first();
             if (person == null) {
-                person = realm.createObject(Person.class);
-                person.setName("Alex");
+                person = new Person();
+                person.name = "Alex";
+                person.save();
             }
 
-            Card card = realm.allObjects(Card.class).where().contains("name", "Stoneforge").findFirst();
-            LineItem lineItem = realm.createObject(LineItem.class);
-            lineItem.setUid(UUID.randomUUID().toString());
-            lineItem.setValue(3500);
-            lineItem.setLastUpdated(LocalDate.now().toDate());
-            lineItem.setCard(card);
+            Card card = Select.from(Card.class).where(Condition.prop("name").like("Stoneforge")).first();
+            LineItem lineItem = new LineItem();
+            lineItem.value = 3500;
+            lineItem.lastUpdated = LocalDate.now().toDate();
+            lineItem.card = card;
 
-            Trade trade = realm.createObject(Trade.class);
-            trade.setUid(UUID.randomUUID().toString());
-            trade.setPerson(person);
-            trade.getLineItems().add(lineItem);
+            Trade trade = new Trade();
+            trade.person = person;
+            trade.tradeDate = LocalDate.now().toDate();
+            trade.save();
 
-            trade.setTradeDate(localDate.toDate());
-            realm.commitTransaction();
+            lineItem.trade = trade;
+            lineItem.save();
+
             localDate = localDate.minusDays(1);
         });
 

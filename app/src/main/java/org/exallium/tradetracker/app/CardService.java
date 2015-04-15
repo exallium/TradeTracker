@@ -7,25 +7,15 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import org.exallium.tradetracker.app.model.RealmManager;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.CardSet;
 import org.exallium.tradetracker.app.model.rest.RestServiceManager;
-import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
-import rx.schedulers.Schedulers;
 
-import java.io.*;
 import java.util.List;
-import java.util.UUID;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class CardService extends Service {
 
@@ -120,18 +110,17 @@ public class CardService extends Service {
 
             @Override
             public void onNext(String cardSetCode) {
-                Realm realm = RealmManager.INSTANCE.getRealm();
-                CardSet cardSet = realm.allObjects(CardSet.class).where().equalTo("code", cardSetCode).findFirst();
-                RealmResults<Card> cardResults = realm.allObjects(Card.class).where().equalTo("cardSet.code", cardSetCode).findAll();
+                CardSet cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardSetCode)).first();
+                List<Card> cardResults = Select.from(Card.class).where(Condition.prop("cardSet.code").eq(cardSetCode)).list();
 
-                if (cardResults.size() != cardSet.getCount()) {
+                if (cardResults.size() != cardSet.count) {
                     int page = 1;
-                    int pageCount = (int) Math.round(Math.ceil(cardSet.getCount() / 20.0f));
+                    int pageCount = (int) Math.round(Math.ceil(cardSet.count / 20.0f));
 
-                    builder.setContentTitle(String.format("Downloading Page %d/%d of " + cardSet.getCode(), page, pageCount));
+                    builder.setContentTitle(String.format("Downloading Page %d/%d of " + cardSet.code, page, pageCount));
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
 
-                    restServiceManager.getCardsForSetObservable(cardSet, 1).doOnCompleted(new OnCardPageDownloadedAction(cardSet.getCode(), page, pageCount)).subscribe();
+                    restServiceManager.getCardsForSetObservable(cardSet, 1).doOnCompleted(new OnCardPageDownloadedAction(cardSet.code, page, pageCount)).subscribe();
                 } else {
                     request(1);
                 }
@@ -153,8 +142,7 @@ public class CardService extends Service {
                 @Override
                 public void call() {
                     if (page != total) {
-                        Realm realm = RealmManager.INSTANCE.getRealm();
-                        CardSet cardSet = realm.allObjects(CardSet.class).where().equalTo("code", cardSetCode).findFirst();
+                        CardSet cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardSetCode)).first();
                         restServiceManager.getCardsForSetObservable(cardSet, page).doOnCompleted(new OnCardPageDownloadedAction(cardSetCode, page + 1, total)).subscribe();
                         builder.setContentTitle(String.format("Downloading Page %d/%d of " + cardSetCode, page + 1, total));
                         notificationManager.notify(NOTIFICATION_ID, builder.build());

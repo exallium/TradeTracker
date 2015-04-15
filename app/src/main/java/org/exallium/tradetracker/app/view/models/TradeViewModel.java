@@ -6,7 +6,7 @@ import org.joda.time.LocalDate;
 import java.util.UUID;
 
 public class TradeViewModel extends ViewModel {
-    private UUID id;
+    private long id;
     private String formattedValue;
     private String with;
     private Uri imagePath;
@@ -14,7 +14,7 @@ public class TradeViewModel extends ViewModel {
     private String cardsTraded;
     private LocalDate tradeDate;
 
-    public TradeViewModel(UUID id, String formattedValue, String with, Uri imagePath, int lineItemCount, String cardsTraded, LocalDate tradeDate) {
+    public TradeViewModel(long id, String formattedValue, String with, Uri imagePath, int lineItemCount, String cardsTraded, LocalDate tradeDate) {
         this.id = id;
         this.formattedValue = formattedValue;
         this.with = with;
@@ -24,7 +24,7 @@ public class TradeViewModel extends ViewModel {
         this.tradeDate = tradeDate;
     }
 
-    public UUID getId() {
+    public long getId() {
         return id;
     }
 
