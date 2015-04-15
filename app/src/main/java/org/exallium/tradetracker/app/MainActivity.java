@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
                 person.save();
             }
 
-            Card card = Select.from(Card.class).where(Condition.prop("name").like("Stoneforge")).first();
+            Card card = Select.from(Card.class).where(Condition.prop("name").like("%Stoneforge%")).first();
             LineItem lineItem = new LineItem();
             lineItem.value = 3500;
             lineItem.lastUpdated = LocalDate.now().toDate();

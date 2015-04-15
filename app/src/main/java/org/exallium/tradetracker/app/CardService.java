@@ -112,12 +112,12 @@ public class CardService extends Service {
                 List<Card> cards = new ArrayList<>();
                 while (reader.hasNext()) {
                     CardJsonObject cardJsonObject = gson.fromJson(reader, CardJsonObject.class);
+                    CardSet cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardJsonObject.set)).first();
                     Card card = Select.from(Card.class)
-                            .where(Condition.prop("cardSet.code").eq(cardJsonObject.set), Condition.prop("name").eq(cardJsonObject.name))
+                            .where(Condition.prop("card_set").eq(cardSet.getId()), Condition.prop("name").eq(cardJsonObject.name))
                             .first();
 
                     if (card == null) {
-                        CardSet cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardJsonObject.set)).first();
                         card = new Card();
                         card.cardSet = cardSet;
                         card.name = cardJsonObject.name;
@@ -135,6 +135,8 @@ public class CardService extends Service {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            subscriber.onCompleted();
 
         }).onBackpressureBlock()
                 .subscribeOn(Schedulers.io())
@@ -177,7 +179,7 @@ public class CardService extends Service {
             @Override
             public void onNext(String cardSetCode) {
                 CardSet cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardSetCode)).first();
-                List<Card> cardResults = Select.from(Card.class).where(Condition.prop("cardSet.code").eq(cardSetCode)).list();
+                List<Card> cardResults = Select.from(Card.class).where(Condition.prop("card_set").eq(cardSet.getId())).list();
 
                 if (cardResults.size() != cardSet.count) {
                     int page = 1;

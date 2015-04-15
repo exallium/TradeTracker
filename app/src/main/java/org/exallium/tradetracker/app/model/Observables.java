@@ -26,8 +26,9 @@ public abstract class Observables {
     public static Observable<CardViewModel> getCardObservable(String cardSetCode) {
         return Observable.create(subscriber -> {
 
+            final CardSet cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardSetCode)).first();
             final List<Card> cards = Select.from(Card.class)
-                    .where(Condition.prop("cardSet.code").eq(cardSetCode))
+                    .where(Condition.prop("card_set").eq(cardSet.getId()))
                     .orderBy("name").list();
 
             for (Card card : cards) {
@@ -51,7 +52,7 @@ public abstract class Observables {
 
     private static Observable<TradeViewModel> tradeObservable = Observable.create(subscriber -> {
 
-        final List<Trade> trades = Select.from(Trade.class).orderBy("tradeDate").list();
+        final List<Trade> trades = Select.from(Trade.class).orderBy("trade_date").list();
         for (Trade trade : trades)
             subscriber.onNext(trade);
 

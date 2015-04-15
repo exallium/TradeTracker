@@ -3,7 +3,6 @@ package org.exallium.tradetracker.app;
 import android.content.Intent;
 import com.orm.SugarApp;
 import net.danlew.android.joda.JodaTimeAndroid;
-import org.exallium.tradetracker.app.model.RealmManager;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
@@ -31,11 +30,6 @@ public class MainApplication extends SugarApp {
         Intent i = new Intent();
         i.setClass(this, CardService.class);
         startService(i);
-    }
-
-    @Override
-    public void onTerminate() {
-        RealmManager.INSTANCE.onTerminate();
     }
 
     public void onObjectSaved(Object object) {
