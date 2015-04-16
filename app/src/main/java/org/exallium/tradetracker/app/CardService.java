@@ -9,10 +9,13 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.orm.SugarRecord;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.CardSet;
+import org.exallium.tradetracker.app.model.entities.LineItem;
+import org.exallium.tradetracker.app.model.entities.Trade;
 import org.exallium.tradetracker.app.model.rest.RestServiceManager;
 import rx.Observable;
 import rx.Subscriber;
@@ -64,8 +67,13 @@ public class CardService extends Service {
 
         if (getSharedPreferences(MainApplication.PREFERENCES, Context.MODE_PRIVATE).getBoolean(PREFS_REQUIRE_DISK_UPDATE, true))
             doDiskLoad();
-        //else
-        //    doWebLoad();
+
+        // On App Start, we want to clean up the DB
+        List<Trade> temp = Select.from(Trade.class).where(Condition.prop("is_temporary").eq(true)).list();
+        Observable.from(temp).map(SugarRecord::getId).forEach(aLong -> {
+            LineItem.deleteAll(LineItem.class, "trade = ?", Long.toString(aLong));
+            Trade.deleteAll(Trade.class, "id = ?", Long.toString(aLong));
+        });
 
     }
 

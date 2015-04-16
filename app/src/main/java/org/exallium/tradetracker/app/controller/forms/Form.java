@@ -38,28 +38,34 @@ public abstract class Form<E extends Record<E>> {
         return true;
     }
 
-    public final void save() {
-        if (isValid()) {
-            entity = populateEntity(entity);
-            entity.save();
-        }
+    public final void forceSave() {
+        if (entity == null)
+            createEntity();
+
+        populateEntity(entity);
+        entity.save();
+    }
+
+    public final boolean save() {
+        boolean isValid = isValid();
+        if (isValid) { forceSave(); }
+        return isValid;
     }
 
     public E getEntity() {
         return entity;
     }
 
-    protected E createEntity() {
+    protected void createEntity() {
         try {
-            return entityClass.newInstance();
+            entity = entityClass.newInstance();
         } catch (Exception e) {
             Log.e(TAG, "Something went horribly Wrong", e);
         }
-        return null;
     }
 
     public abstract boolean isValid();
-    protected abstract E populateEntity(@Nullable E entity);
+    protected abstract void populateEntity(@Nullable E entity);
     protected abstract void populateFields(@Nullable E entity);
 
 }

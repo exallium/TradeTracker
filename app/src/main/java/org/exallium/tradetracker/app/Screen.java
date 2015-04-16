@@ -1,6 +1,9 @@
 package org.exallium.tradetracker.app;
 
 
+/**
+ * These are all Fragments
+ */
 public enum Screen {
 
     NONE(0, R.string.screen_unknown),

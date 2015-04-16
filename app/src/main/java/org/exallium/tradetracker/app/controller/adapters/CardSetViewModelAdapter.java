@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import org.exallium.tradetracker.app.BundleConstants;
 import org.exallium.tradetracker.app.MainApplication;
 import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.Screen;
@@ -73,7 +74,7 @@ public class CardSetViewModelAdapter extends ViewModelAdapter<CardSetViewModel> 
         public void onClick(View v) {
             if (subscriber != null) {
                 Bundle bundle = new Bundle();
-                bundle.putString(ViewModelAdapterFactory.CARD_SET, model.getCode());
+                bundle.putString(BundleConstants.CARD_SET, model.getCode());
                 subscriber.onNext(new Pair<>(Screen.CARDS, bundle));
             }
         }

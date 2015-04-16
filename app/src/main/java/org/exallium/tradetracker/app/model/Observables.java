@@ -3,6 +3,7 @@ package org.exallium.tradetracker.app.model;
 import android.net.Uri;
 import com.orm.query.Condition;
 import com.orm.query.Select;
+import org.exallium.tradetracker.app.BundleConstants;
 import org.exallium.tradetracker.app.MainApplication;
 import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.model.entities.Card;
@@ -11,6 +12,7 @@ import org.exallium.tradetracker.app.model.entities.LineItem;
 import org.exallium.tradetracker.app.model.entities.Trade;
 import org.exallium.tradetracker.app.view.models.CardSetViewModel;
 import org.exallium.tradetracker.app.view.models.CardViewModel;
+import org.exallium.tradetracker.app.view.models.LineItemViewModel;
 import org.exallium.tradetracker.app.view.models.TradeViewModel;
 import org.joda.time.LocalDate;
 import rx.Observable;
@@ -22,6 +24,28 @@ public abstract class Observables {
 
     public static Observable<CardSetViewModel> getCardSetObservable() { return cardSetObservable; }
     public static Observable<TradeViewModel> getTradeObservable() { return tradeObservable; }
+
+    public static Observable<LineItemViewModel> getLineItemsObservable(boolean direction, long tradeId) {
+        return Observable.create(subscriber -> {
+
+            if (tradeId != BundleConstants.NEW_OBJECT) {
+                List<LineItem> lineItems = Select.from(LineItem.class).where(Condition.prop("trade").eq(tradeId), Condition.prop("direction").eq(direction)).list();
+                for (LineItem item : lineItems) {
+                    subscriber.onNext(item);
+                }
+            }
+
+            subscriber.onCompleted();
+
+        }).map(l -> {
+
+            LineItem lineItem = (LineItem) l;
+
+            String description = lineItem.card == null ? lineItem.description : lineItem.card.name;
+
+            return new LineItemViewModel(description);
+        });
+    }
 
     public static Observable<CardViewModel> getCardObservable(String cardSetCode) {
         return Observable.create(subscriber -> {
@@ -52,7 +76,7 @@ public abstract class Observables {
 
     private static Observable<TradeViewModel> tradeObservable = Observable.create(subscriber -> {
 
-        final List<Trade> trades = Select.from(Trade.class).orderBy("trade_date").list();
+        final List<Trade> trades = Select.from(Trade.class).where(Condition.prop("is_temporary").eq(false)).orderBy("trade_date").list();
         for (Trade trade : trades)
             subscriber.onNext(trade);
 

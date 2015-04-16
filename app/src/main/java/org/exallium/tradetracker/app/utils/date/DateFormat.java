@@ -6,6 +6,8 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Date;
+
 public class DateFormat {
 
     private static final DateTimeFormatter format = DateTimeFormat.forPattern("MMMMM dd yyyy");
@@ -20,6 +22,19 @@ public class DateFormat {
             return format.print(date);
         }
 
+    }
+
+    public static String toField(LocalDate date) {
+        return format.print(date);
+    }
+
+    public static LocalDate fromString(String date) {
+        try {
+            return format.parseLocalDate(date);
+        }
+        catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
 }

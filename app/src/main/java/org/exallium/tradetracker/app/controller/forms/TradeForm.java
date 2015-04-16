@@ -7,19 +7,21 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import butterknife.InjectView;
 import com.google.common.collect.Iterables;
+import com.orm.query.Condition;
 import com.orm.query.Select;
 import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.model.entities.Person;
 import org.exallium.tradetracker.app.model.entities.Trade;
+import org.exallium.tradetracker.app.utils.date.DateFormat;
+import org.joda.time.LocalDate;
 import rx.Observable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TradeForm extends Form<Trade> {
 
     @InjectView(R.id.trade_person) AutoCompleteTextView tradePerson;
     @InjectView(R.id.trade_date) EditText tradeDate;
+
+    private LocalDate cachedTradeDate = LocalDate.now();
 
     public TradeForm(Class<Trade> entityClass, View formView) {
         super(entityClass, formView);
@@ -32,21 +34,45 @@ public class TradeForm extends Form<Trade> {
 
     @Override
     public boolean isValid() {
+        boolean valid = true;
         if (tradePerson.getText().length() == 0) {
-            return false;
+            valid = false;
         }
 
-        return tradeDate.getText().length() != 0;
-
+        LocalDate newDate = DateFormat.fromString(tradeDate.getText().toString());
+        if (newDate != null) {
+            cachedTradeDate = newDate;
+        } else {
+            valid = false;
+        }
+        return valid;
     }
 
     @Override
-    protected Trade populateEntity(@Nullable Trade entity) {
-        return null;
+    protected void populateEntity(@Nullable Trade entity) {
+        if (entity != null && isValid()) {
+            String name = tradePerson.getText().toString();
+            Person person = Select.from(Person.class).where(Condition.prop("name").eq(name)).first();
+            if (person == null) {
+                person = new Person();
+                person.name = name;
+                person.save();
+            }
+            entity.person = person;
+            entity.tradeDate = cachedTradeDate.toDate();
+        } else if (entity != null) {
+            entity.isTemporary = true;
+            entity.tradeDate = cachedTradeDate.toDate();
+        }
     }
 
     @Override
     protected void populateFields(@Nullable Trade entity) {
+        if (entity != null) {
+            cachedTradeDate = LocalDate.fromDateFields(entity.tradeDate);
+            tradeDate.setText(DateFormat.toField(cachedTradeDate));
+            tradePerson.setText(entity.person.name);
+        }
 
     }
 }

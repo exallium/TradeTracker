@@ -25,6 +25,14 @@
     <string name="trade_with">With %s</string>
     <string name="trade_subtitle_default">Fill in details below.</string>
     <string name="trade_tab_details">Details</string>
+    <string name="trade_tab_from">From</string>
+    <string name="trade_tab_to">To</string>
     <string name="trade_form_label_with">Who are you trading with?</string>
     <string name="trade_form_label_date">When is it taking place?</string>
+
+    <!-- LineItem Dialogs -->
+    <string name="type_select">What are you trading?</string>
+    <string name="type_card">Card</string>
+    <string name="type_cash">Cash</string>
+    <string name="type_misc">Other</string>
 </resources>

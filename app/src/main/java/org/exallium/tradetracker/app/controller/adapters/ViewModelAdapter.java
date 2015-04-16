@@ -61,9 +61,11 @@ public abstract class ViewModelAdapter<VM extends ViewModel> extends RecyclerVie
 
             VM prev = viewModels.size() == 0 ? null : viewModels.get(viewModels.size() - 1);
 
-            if (prev == null || headerComparator.compare(prev, vm) != 0) {
-                headerPositions.add(viewModels.size());
-                viewModels.add(vm);
+            if (headerComparator != null) {
+                if (prev == null || headerComparator.compare(prev, vm) != 0) {
+                    headerPositions.add(viewModels.size());
+                    viewModels.add(vm);
+                }
             }
             viewModels.add(vm);
 

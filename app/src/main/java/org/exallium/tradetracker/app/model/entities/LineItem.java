@@ -8,4 +8,5 @@ public class LineItem extends Record<LineItem> {
     public long value;
     public Trade trade;
     public Date lastUpdated;
+    public boolean direction;
 }
