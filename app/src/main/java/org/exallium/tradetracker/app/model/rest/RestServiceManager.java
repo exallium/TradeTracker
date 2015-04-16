@@ -45,6 +45,7 @@ public class RestServiceManager {
                 set = new CardSet();
                 set.code = setInfo.get("code").toString();
                 set.count = (int) Math.round(((Double) setInfo.get("cardCount")));
+                set.name = setInfo.get("name").toString();
             }
 
             return setCode;

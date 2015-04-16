@@ -42,9 +42,9 @@ public abstract class Observables {
 
     private static Observable<CardSetViewModel> cardSetObservable = Observable.create(subscriber -> {
 
-        final List<CardSet> cardSets = Select.from(CardSet.class).orderBy("code").list();
+        final List<CardSet> cardSets = Select.from(CardSet.class).orderBy("name").list();
         for (CardSet cardSet : cardSets) {
-            subscriber.onNext(new CardSetViewModel(cardSet.code));
+            subscriber.onNext(new CardSetViewModel(cardSet.code, cardSet.name));
         }
 
         subscriber.onCompleted();

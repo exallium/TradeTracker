@@ -11,7 +11,7 @@ def parse_cards(card_set):
     return [{'name': card['name'], 'multiverseId': card['multiverseid'] if 'multiverseid' in card else -1, 'set': card_set['code']} for card in card_set['cards']]
 
 def parse_sets(card_sets):
-    return [{'code': card_set['code'], 'count': len(card_set['cards'])} for card_set in card_sets]
+    return [{'code': card_set['code'], 'name': card_set['name'], 'count': len(card_set['cards'])} for card_set in card_sets]
     
 def carddata_gen():
     with open(INFILE, 'r') as fin:

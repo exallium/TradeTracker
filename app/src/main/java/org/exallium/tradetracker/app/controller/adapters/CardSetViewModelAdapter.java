@@ -1,6 +1,7 @@
 package org.exallium.tradetracker.app.controller.adapters;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ public class CardSetViewModelAdapter extends ViewModelAdapter<CardSetViewModel> 
     private Subscriber<Pair<Screen, Bundle>> subscriber = null;
     private final Observable<Pair<Screen, Bundle>> onNavigationClickedObservable = Observable.create(subscriber -> this.subscriber = (Subscriber<Pair<Screen, Bundle>>) subscriber);
 
-    private final static Comparator<CardSetViewModel> comparator = ((lhs, rhs) -> lhs.getCode().substring(0,1).compareTo(rhs.getCode().substring(0,1)));
+    private final static Comparator<CardSetViewModel> comparator = ((lhs, rhs) -> lhs.getName().substring(0, 1).toLowerCase().compareTo(rhs.getName().substring(0, 1).toLowerCase()));
 
     public CardSetViewModelAdapter(Observable<CardSetViewModel> allObjectsObservable) {
         super(allObjectsObservable, comparator);
@@ -29,13 +30,15 @@ public class CardSetViewModelAdapter extends ViewModelAdapter<CardSetViewModel> 
 
     @Override
     protected ViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
+        TextView view = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
+        view.setTextColor(view.getContext().getResources().getColor(R.color.abc_secondary_text_material_light));
         return new HeaderViewHolder(view);
     }
 
     @Override
     protected ViewHolder onCreateModelViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
+        TextView view = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
+        view.setEllipsize(TextUtils.TruncateAt.END);
         return new ModelViewHolder(view);
     }
 
@@ -47,7 +50,7 @@ public class CardSetViewModelAdapter extends ViewModelAdapter<CardSetViewModel> 
 
         @Override
         public void onBind(CardSetViewModel viewModel) {
-            ((TextView) itemView).setText(viewModel.getCode().substring(0,1));
+            ((TextView) itemView).setText(viewModel.getName().substring(0,1));
         }
     }
 
@@ -63,7 +66,7 @@ public class CardSetViewModelAdapter extends ViewModelAdapter<CardSetViewModel> 
         @Override
         public void onBind(CardSetViewModel viewModel) {
             this.model = viewModel;
-            ((TextView) itemView).setText(viewModel.getCode());
+            ((TextView) itemView).setText(viewModel.getName());
         }
 
         @Override

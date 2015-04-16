@@ -43,6 +43,7 @@ public class CardService extends Service {
     private class CardSetJsonObject {
         int count;
         String code;
+        String name;
     }
 
     @Override
@@ -101,6 +102,7 @@ public class CardService extends Service {
                         cardSet = new CardSet();
                         cardSet.count = cardSetJsonObject.count;
                         cardSet.code = cardSetJsonObject.code;
+                        cardSet.name = cardSetJsonObject.name;
                         cardSets.add(cardSet);
                     }
 
