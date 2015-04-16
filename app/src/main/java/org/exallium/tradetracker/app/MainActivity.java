@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageButton;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import org.exallium.tradetracker.app.controller.adapters.DrawerNavAdapter;
@@ -22,6 +24,7 @@ public class MainActivity extends Activity {
     @InjectView(R.id.left_drawer) RecyclerView navRecyclerView;
     @InjectView(R.id.drawer_container) DrawerLayout drawerContainer;
     @InjectView(R.id.toolbar) Toolbar toolbar;
+    @InjectView(R.id.fab) ImageButton fab;
 
 
     private Subscriber<Pair<Screen, Bundle>> fragmentRequestSubscriber;
@@ -74,6 +77,17 @@ public class MainActivity extends Activity {
         }
 
         drawerContainer.closeDrawer(Gravity.LEFT);
+    }
+
+    private void setupFabButton(Screen screen) {
+        switch (screen) {
+            case TRADES:
+                fab.setVisibility(View.VISIBLE);
+                fab.setOnClickListener(v -> MainApplication.fragmentRequestSubject.onNext(new Pair<>(Screen.TRADE, null)));
+                break;
+            default:
+                fab.setVisibility(View.GONE);
+        }
     }
 
     @Override

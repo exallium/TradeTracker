@@ -29,9 +29,6 @@ public class ListFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private ViewModelAdapter viewModelAdapter;
 
-    @InjectView(R.id.fab) ImageButton fab;
-    @InjectView(R.id.fragment_list) RecyclerView recyclerView;
-
     public static ListFragment createInstance(Screen screen, Bundle bundle) {
         Bundle arguments = new Bundle();
         ListFragment fragment = new ListFragment();
@@ -44,20 +41,13 @@ public class ListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list, container, false);
-
-        ButterKnife.inject(this, view);
-
+        RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-
         Screen screen = Screen.getById(getArguments().getInt(Screen.SCREEN_ID));
         viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen, getArguments().getBundle(Screen.BUNDLE_ID));
         recyclerView.setAdapter(viewModelAdapter);
-
-        setupFabButton(screen);
-
-        return view;
+        return recyclerView;
     }
 
     @Override
@@ -72,15 +62,6 @@ public class ListFragment extends Fragment {
         viewModelAdapter.onPause();
     }
 
-    private void setupFabButton(Screen screen) {
-        switch (screen) {
-            case TRADES:
-                fab.setVisibility(View.VISIBLE);
-                fab.setOnClickListener(v -> MainApplication.fragmentRequestSubject.onNext(new Pair<>(Screen.TRADE, null)));
-                break;
-            default:
-                fab.setVisibility(View.GONE);
-        }
-    }
+
 
 }
