@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <FrameLayout
@@ -9,6 +10,7 @@
                       android:layout_width="match_parent"
                       android:layout_height="match_parent">
             <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:background="#111"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"/>
@@ -18,13 +20,7 @@
                     android:layout_weight="1"
                     android:layout_height="0dip" />
         </LinearLayout>
-        <include
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="bottom|right"
-                layout="@layout/fab" />
+
     </FrameLayout>
 
     <!-- Navigation Drawer -->

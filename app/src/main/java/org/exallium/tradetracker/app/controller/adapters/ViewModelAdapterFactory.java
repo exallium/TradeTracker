@@ -11,8 +11,6 @@ import rx.subjects.Subject;
 
 public class ViewModelAdapterFactory {
 
-    public static final Subject<Pair<Screen, Bundle>, Pair<Screen, Bundle>> adapterSubject = PublishSubject.create();
-
     public static final String CARD_SET = "ViewModelAdapterFactory.cardSetCode";
 
     public static ViewModelAdapter createAdapter(Screen screen, @Nullable Bundle args) {

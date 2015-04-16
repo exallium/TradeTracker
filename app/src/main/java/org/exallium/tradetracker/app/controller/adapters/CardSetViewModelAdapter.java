@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import org.exallium.tradetracker.app.MainApplication;
 import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.Screen;
 import org.exallium.tradetracker.app.view.models.CardSetViewModel;
@@ -23,7 +24,7 @@ public class CardSetViewModelAdapter extends ViewModelAdapter<CardSetViewModel> 
 
     public CardSetViewModelAdapter(Observable<CardSetViewModel> allObjectsObservable) {
         super(allObjectsObservable, comparator);
-        onNavigationClickedObservable.subscribe(ViewModelAdapterFactory.adapterSubject);
+        onNavigationClickedObservable.subscribe(MainApplication.fragmentRequestSubject);
     }
 
     @Override

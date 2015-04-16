@@ -9,8 +9,18 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapterFactory;
+import org.exallium.tradetracker.app.model.entities.Card;
+import org.exallium.tradetracker.app.model.entities.LineItem;
+import org.exallium.tradetracker.app.model.entities.Person;
+import org.exallium.tradetracker.app.model.entities.Trade;
+import org.joda.time.LocalDate;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -18,6 +28,9 @@ public class ListFragment extends Fragment {
 
     private LinearLayoutManager linearLayoutManager;
     private ViewModelAdapter viewModelAdapter;
+
+    @InjectView(R.id.fab) ImageButton fab;
+    @InjectView(R.id.fragment_list) RecyclerView recyclerView;
 
     public static ListFragment createInstance(Screen screen, Bundle bundle) {
         Bundle arguments = new Bundle();
@@ -31,7 +44,10 @@ public class ListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
+
+        ButterKnife.inject(this, view);
+
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -39,7 +55,9 @@ public class ListFragment extends Fragment {
         viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen, getArguments().getBundle(Screen.BUNDLE_ID));
         recyclerView.setAdapter(viewModelAdapter);
 
-        return recyclerView;
+        setupFabButton(screen);
+
+        return view;
     }
 
     @Override
@@ -53,4 +71,16 @@ public class ListFragment extends Fragment {
         super.onPause();
         viewModelAdapter.onPause();
     }
+
+    private void setupFabButton(Screen screen) {
+        switch (screen) {
+            case TRADES:
+                fab.setVisibility(View.VISIBLE);
+                fab.setOnClickListener(v -> MainApplication.fragmentRequestSubject.onNext(new Pair<>(Screen.TRADE, null)));
+                break;
+            default:
+                fab.setVisibility(View.GONE);
+        }
+    }
+
 }
