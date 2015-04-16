@@ -24,4 +24,7 @@
     <!-- Trade Screen -->
     <string name="trade_with">With %s</string>
     <string name="trade_subtitle_default">Fill in details below.</string>
+    <string name="trade_tab_details">Details</string>
+    <string name="trade_form_label_with">Who are you trading with?</string>
+    <string name="trade_form_label_date">When is it taking place?</string>
 </resources>

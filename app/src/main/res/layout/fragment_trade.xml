@@ -3,4 +3,15 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <org.exallium.tradetracker.app.view.widgets.SlidingTabLayout
+            android:id="@+id/trade_tabs"
+            android:background="@color/primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    </org.exallium.tradetracker.app.view.widgets.SlidingTabLayout>
+    <android.support.v4.view.ViewPager
+            android:id="@+id/trade_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1" />
 </LinearLayout>

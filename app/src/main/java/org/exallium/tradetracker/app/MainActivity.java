@@ -29,7 +29,6 @@ public class MainActivity extends Activity {
     @InjectView(R.id.toolbar) Toolbar toolbar;
     @InjectView(R.id.fab) ImageButton fab;
 
-
     private Subscriber<Pair<Screen, Bundle>> fragmentRequestSubscriber;
 
     private class FragmentRequestSubscriber extends Subscriber<Pair<Screen, Bundle>> {
