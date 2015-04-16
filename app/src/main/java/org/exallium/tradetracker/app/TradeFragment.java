@@ -9,12 +9,10 @@ import android.view.ViewGroup;
 
 public class TradeFragment extends Fragment {
 
-    public static final String TRADE_ID = "TradeFragment.TradeId";
-
-    public static TradeFragment createInstance(Bundle bundle) {
+    public static TradeFragment createInstance(@Nullable Bundle bundle) {
         TradeFragment fragment = new TradeFragment();
         Bundle args = new Bundle();
-        args.putInt(TRADE_ID, bundle.containsKey(TRADE_ID) ? bundle.getInt(TRADE_ID) : -1);
+        args.putLong(BundleConstants.TRADE_ID, bundle == null ? BundleConstants.NEW_OBJECT : bundle.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT));
         fragment.setArguments(args);
         return fragment;
     }

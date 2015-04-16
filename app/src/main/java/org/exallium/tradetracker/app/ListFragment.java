@@ -5,35 +5,22 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapterFactory;
-import org.exallium.tradetracker.app.model.entities.Card;
-import org.exallium.tradetracker.app.model.entities.LineItem;
-import org.exallium.tradetracker.app.model.entities.Person;
-import org.exallium.tradetracker.app.model.entities.Trade;
-import org.joda.time.LocalDate;
-import rx.Subscriber;
-import rx.Subscription;
 
 public class ListFragment extends Fragment {
 
     private LinearLayoutManager linearLayoutManager;
     private ViewModelAdapter viewModelAdapter;
 
-    public static ListFragment createInstance(Screen screen, Bundle bundle) {
+    public static ListFragment createInstance(Screen screen, @Nullable Bundle bundle) {
         Bundle arguments = new Bundle();
         ListFragment fragment = new ListFragment();
-        arguments.putInt(Screen.SCREEN_ID, screen.getId());
-        arguments.putBundle(Screen.BUNDLE_ID, bundle);
+        arguments.putInt(BundleConstants.SCREEN_ID, screen.getId());
+        arguments.putBundle(BundleConstants.BUNDLE_ID, bundle);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -44,8 +31,8 @@ public class ListFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        Screen screen = Screen.getById(getArguments().getInt(Screen.SCREEN_ID));
-        viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen, getArguments().getBundle(Screen.BUNDLE_ID));
+        Screen screen = Screen.getById(getArguments().getInt(BundleConstants.SCREEN_ID));
+        viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen, getArguments().getBundle(BundleConstants.BUNDLE_ID));
         recyclerView.setAdapter(viewModelAdapter);
         return recyclerView;
     }

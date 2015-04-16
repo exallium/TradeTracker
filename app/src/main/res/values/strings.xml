@@ -19,4 +19,8 @@
     <string name="screen_people">People</string>
     <string name="screen_stats">Stats</string>
     <string name="screen_unknown">Unknown</string>
+
+    <!-- Trade Screen -->
+    <string name="trade_with">With %s</string>
+    <string name="trade_subtitle_default">Fill in details below.</string>
 </resources>

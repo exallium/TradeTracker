@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 import org.exallium.tradetracker.app.controller.adapters.DrawerNavAdapter;
 import org.exallium.tradetracker.app.model.entities.Trade;
 import rx.Subscriber;
@@ -72,9 +74,10 @@ public class MainActivity extends Activity {
                     transaction.replace(R.id.fragment_container, ListFragment.createInstance(screen, bundle));
             }
             transaction.commit();
-            toolbar.setTitle(screen.getName());
             currentScreen = screen;
+
             setupFabButton(screen);
+            setupToolbar(screen, bundle);
         }
 
         drawerContainer.closeDrawer(Gravity.LEFT);
@@ -88,6 +91,25 @@ public class MainActivity extends Activity {
                 break;
             default:
                 fab.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupToolbar(Screen screen, Bundle bundle) {
+        toolbar.setTitle(screen.getName());
+        switch (screen) {
+            case TRADE:
+                if (bundle != null) {
+                    long tradeId = bundle.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT);
+                    if (tradeId != BundleConstants.NEW_OBJECT) {
+                        Trade trade = Select.from(Trade.class).where(Condition.prop("id").eq(tradeId)).first();
+                        toolbar.setSubtitle(getString(R.string.trade_with, trade.person.name));
+                    } else {
+                        toolbar.setSubtitle(getString(R.string.trade_subtitle_default));
+                    }
+                }
+                break;
+            default:
+                toolbar.setSubtitle("");
         }
     }
 
