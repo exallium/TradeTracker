@@ -9,7 +9,7 @@ public enum Screen {
     PEOPLE(3, R.string.screen_people),
     STATS(4, R.string.screen_stats),
     CARDS(5, R.string.screen_cards),
-    TRADE(6, R.string.screen_trades);
+    TRADE(6, R.string.screen_trade);
 
     private final int id;
     private final int nameRes;

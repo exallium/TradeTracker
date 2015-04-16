@@ -3,6 +3,7 @@ package org.exallium.tradetracker.app;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,17 +95,16 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void setupToolbar(Screen screen, Bundle bundle) {
+    private void setupToolbar(Screen screen, @Nullable Bundle bundle) {
         toolbar.setTitle(screen.getName());
         switch (screen) {
             case TRADE:
+                toolbar.setSubtitle(getString(R.string.trade_subtitle_default));
                 if (bundle != null) {
                     long tradeId = bundle.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT);
                     if (tradeId != BundleConstants.NEW_OBJECT) {
                         Trade trade = Select.from(Trade.class).where(Condition.prop("id").eq(tradeId)).first();
                         toolbar.setSubtitle(getString(R.string.trade_with, trade.person.name));
-                    } else {
-                        toolbar.setSubtitle(getString(R.string.trade_subtitle_default));
                     }
                 }
                 break;

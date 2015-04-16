@@ -15,6 +15,7 @@
 
     <!-- Drawer Nav -->
     <string name="screen_trades">Trades</string>
+    <string name="screen_trade">Trade</string>
     <string name="screen_cards">Cards</string>
     <string name="screen_people">People</string>
     <string name="screen_stats">Stats</string>
