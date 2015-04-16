@@ -28,7 +28,6 @@ public class DrawerNavAdapter extends RecyclerView.Adapter<DrawerNavAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         TextView view = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
-        view.setTextColor(Color.WHITE);
         return new ViewHolder(view);
     }
 

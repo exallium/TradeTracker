@@ -74,6 +74,7 @@ public class MainActivity extends Activity {
             transaction.commit();
             toolbar.setTitle(screen.getName());
             currentScreen = screen;
+            setupFabButton(screen);
         }
 
         drawerContainer.closeDrawer(Gravity.LEFT);
