@@ -136,7 +136,7 @@ public class TradeFragment extends Fragment {
             switch (tabTitles[position]) {
                 case R.string.trade_tab_details:
                     view = LayoutInflater.from(container.getContext()).inflate(R.layout.form_trade, container, false);
-                    tradeForm = new TradeForm(Trade.class, view);
+                    tradeForm = new TradeForm(view);
                     if (tradeId != BundleConstants.NEW_OBJECT) {
                         tradeForm.initialize(tradeId);
                     }
