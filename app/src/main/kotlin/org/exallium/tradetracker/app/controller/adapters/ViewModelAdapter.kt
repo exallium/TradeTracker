@@ -21,7 +21,7 @@ import java.util.TreeSet
 
 public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : Observable<VM>, private val comparator : Comparator<VM>?) : RecyclerView.Adapter<ViewModelAdapter<VM>.ViewHolder>() {
 
-    override final fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override final fun onBindViewHolder(holder: ViewHolder<VM>?, position: Int) {
         holder?.onBind(viewModels.get(position))
     }
 
@@ -29,7 +29,7 @@ public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : 
         return viewModels.size()
     }
 
-    override final fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder? {
+    override final fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder<VM>? {
         return when (viewType) {
             HEADER_TYPE -> onCreateHeaderViewHolder(parent)
             else -> onCreateModelViewHolder(parent)
@@ -40,8 +40,8 @@ public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : 
         return if (headerPositions.contains(position)) HEADER_TYPE else MODEL_TYPE
     }
 
-    protected abstract fun onCreateHeaderViewHolder(parent : ViewGroup?) : ViewHolder?
-    protected abstract fun onCreateModelViewHolder(parent : ViewGroup?) : ViewHolder?
+    protected abstract fun onCreateHeaderViewHolder(parent : ViewGroup?) : ViewHolder<VM>?
+    protected abstract fun onCreateModelViewHolder(parent : ViewGroup?) : ViewHolder<VM>?
 
     public fun onPause() {
         unsubscribe()
@@ -118,7 +118,7 @@ public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : 
 
     }
 
-    public inner abstract class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+    public abstract class ViewHolder<VM : ViewModel>(itemView : View) : RecyclerView.ViewHolder(itemView) {
         public abstract fun onBind(viewModel : VM)
     }
 
