@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter;
-import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapterFactory;
 
 public class ListFragment extends Fragment {
 
@@ -32,7 +31,7 @@ public class ListFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         Screen screen = Screen.getById(getArguments().getInt(BundleConstants.SCREEN_ID));
-        viewModelAdapter = ViewModelAdapterFactory.createAdapter(screen, getArguments().getBundle(BundleConstants.BUNDLE_ID));
+        viewModelAdapter = ViewModelAdapter.Companion.create(screen, getArguments().getBundle(BundleConstants.BUNDLE_ID));
         recyclerView.setAdapter(viewModelAdapter);
         return recyclerView;
     }

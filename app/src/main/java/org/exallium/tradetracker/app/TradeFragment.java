@@ -14,7 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapterFactory;
+import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter;
+import org.exallium.tradetracker.app.controller.dialogs.DialogScreen;
 import org.exallium.tradetracker.app.controller.dialogs.DialogsPackage;
 import org.exallium.tradetracker.app.controller.forms.TradeForm;
 import org.exallium.tradetracker.app.model.entities.Trade;
@@ -149,7 +150,7 @@ public class TradeFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putBoolean(BundleConstants.LINE_ITEM_DIRECTION, direction);
                     bundle.putLong(BundleConstants.TRADE_ID, tradeId);
-                    rv.setAdapter(ViewModelAdapterFactory.createAdapter(Screen.TRADE, bundle));
+                    rv.setAdapter(ViewModelAdapter.Companion.create(Screen.TRADE, bundle));
                     container.addView(view);
             }
 

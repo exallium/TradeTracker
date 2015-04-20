@@ -10,10 +10,15 @@ import android.widget.Button
 import butterknife.ButterKnifeViewHolder
 import butterknife.bindView
 import org.exallium.tradetracker.app.BundleConstants
-import org.exallium.tradetracker.app.DialogScreen
 import org.exallium.tradetracker.app.R
 import rx.android.view.ViewObservable
 
+public enum class DialogScreen(val id: Int) {
+    LINE_ITEM_TYPE_DIALOG: DialogScreen(0)
+    LINE_ITEM_CARD_DIALOG: DialogScreen(1)
+    LINE_ITEM_CASH_DIALOG: DialogScreen(2)
+    LINE_ITEM_MISC_DIALOG: DialogScreen(3)
+}
 
 public fun createDialogFragment(bundle : Bundle) : DialogFragment {
     val dialogScreen = DialogScreen.values()[bundle.getInt(BundleConstants.SCREEN_ID)]
@@ -64,7 +69,7 @@ private class LineItemTypeDialog : DialogFragment() {
 
     private fun doWorkflowStep(screen : DialogScreen) {
         val bundle = getArguments().getBundle(BundleConstants.BUNDLE_ID)
-        bundle.putInt(BundleConstants.SCREEN_ID, screen.getId())
+        bundle.putInt(BundleConstants.SCREEN_ID, screen.id)
         dismiss()
         createDialogFragment(bundle).show(getParentFragment().getChildFragmentManager(), "cardDialog")
     }
