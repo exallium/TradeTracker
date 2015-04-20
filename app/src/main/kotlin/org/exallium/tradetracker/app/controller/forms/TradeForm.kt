@@ -5,7 +5,6 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import butterknife.ButterKnifeViewHolder
-import butterknife.InjectView
 import butterknife.bindView
 import com.orm.query.Condition
 import com.orm.query.Select
