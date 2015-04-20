@@ -24,17 +24,4 @@ public class DateFormat {
 
     }
 
-    public static String toField(LocalDate date) {
-        return format.print(date);
-    }
-
-    public static LocalDate fromString(String date) {
-        try {
-            return format.parseLocalDate(date);
-        }
-        catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
 }
