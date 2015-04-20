@@ -18,6 +18,7 @@ import org.exallium.tradetracker.app.MainApplication
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.Screen
 import org.exallium.tradetracker.app.utils.date.DateFormat
+import org.exallium.tradetracker.app.utils.printForDisplay
 import org.exallium.tradetracker.app.view.models.TradeViewModel
 import org.exallium.tradetracker.app.view.transformations.CircleTransformation
 import org.exallium.tradetracker.app.view.transformations.MTGCardCropTransformation
@@ -39,7 +40,7 @@ public class TradeViewModelAdapter(observable: Observable<TradeViewModel>) : Vie
     class HeaderViewHolder(itemView: View) : ViewModelAdapter.ViewHolder<TradeViewModel>(itemView) {
 
         override fun onBind(viewModel: TradeViewModel) {
-            (itemView as TextView).setText(DateFormat.toString(itemView.getResources(), viewModel.date))
+            (itemView as TextView).setText(viewModel.date.printForDisplay(itemView.getContext().getResources()))
         }
     }
 
