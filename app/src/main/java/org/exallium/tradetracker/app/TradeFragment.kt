@@ -64,7 +64,22 @@ public class TradeFragment : Fragment() {
         super.onAttach(activity)
 
         fab = activity?.findViewById(R.id.fab) as ImageButton?
-        fab!!.setOnClickListener({})
+        fab!!.setOnClickListener({
+            if (viewPager.getCurrentItem() != 0) {
+                var tradeId = getArguments().getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT);
+                if (tradeId == BundleConstants.NEW_OBJECT) {
+                    tradeForm?.forceSave();
+                    val trade = tradeForm?.getEntity();
+                    tradeId = if (trade != null) trade.getId() else BundleConstants.NEW_OBJECT;
+                }
+
+                var bundle = Bundle();
+                bundle.putLong(BundleConstants.TRADE_ID, tradeId);
+                bundle.putBoolean(BundleConstants.LINE_ITEM_DIRECTION, viewPager.getCurrentItem() == 1);
+                bundle.putInt(BundleConstants.SCREEN_ID, DialogScreen.LINE_ITEM_TYPE.id);
+                createDialogFragment(bundle).show(getChildFragmentManager(), "lineItemDialog");
+            }
+        })
     }
 
     override fun onDetach() {
