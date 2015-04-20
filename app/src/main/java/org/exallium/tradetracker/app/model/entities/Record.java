@@ -8,6 +8,10 @@ public class Record<T> extends SugarRecord<T> {
     @Override
     public void save() {
         super.save();
+        // We should move to an Observer Model, where when we save a new Model, we emit it via an observer, and
+        // it gets sent down the chain.  The Adapter sees this new item, finds the appropriate position in the view
+        // to add it, and notifyAdded at the appropriate location, or notifyModified if this is just a modification
+        // (The item already exists in the list)
         MainApplication.getInstance().onObjectSaved(this);
     }
 }
