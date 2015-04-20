@@ -13,6 +13,8 @@ import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.model.entities.Person
 import org.exallium.tradetracker.app.model.entities.Trade
 import org.exallium.tradetracker.app.utils.date.DateFormat
+import org.exallium.tradetracker.app.utils.printForField
+import org.exallium.tradetracker.app.utils.toLocalDate
 import org.joda.time.LocalDate
 
 public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Trade>()) {
@@ -23,7 +25,7 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
     }
 
     private val viewHolder = ViewHolder(formView)
-    private var cachedDate : LocalDate = LocalDate.now()
+    private var cachedDate : LocalDate? = LocalDate.now()
 
     init {
         if (Select.from(javaClass<Person>()).count() != 0L) {
@@ -35,7 +37,7 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
     override fun isValid(): Boolean {
         var valid = viewHolder.tradePerson.getText()?.length() == 0
 
-        var date = DateFormat.fromString(viewHolder.tradeDate.getText()?.toString())
+        var date = viewHolder.tradeDate.getText()?.toString()?.toLocalDate()
 
         date?.let { cachedDate = date }
         valid = date != null && valid
@@ -53,17 +55,17 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
                 person.save()
             }
             entity.person = person
-            entity.tradeDate = cachedDate.toDate()
+            entity.tradeDate = cachedDate?.toDate()
         } else if (entity != null) {
             entity.isTemporary = true
-            entity.tradeDate = cachedDate.toDate()
+            entity.tradeDate = cachedDate?.toDate()
         }
     }
 
     override fun populateEntity(entity: Trade?) {
         if (entity != null) {
             cachedDate = LocalDate.fromDateFields(entity.tradeDate)
-            viewHolder.tradeDate.setText(DateFormat.toField(cachedDate))
+            viewHolder.tradeDate.setText(cachedDate?.printForField())
             viewHolder.tradePerson.setText(entity.person.name)
         }
     }

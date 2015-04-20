@@ -8,7 +8,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import android.widget.ImageButton;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapterFactory;
-import org.exallium.tradetracker.app.controller.dialogs.LineItemDialogFactory;
+import org.exallium.tradetracker.app.controller.dialogs.DialogsPackage;
 import org.exallium.tradetracker.app.controller.forms.TradeForm;
 import org.exallium.tradetracker.app.model.entities.Trade;
 import org.exallium.tradetracker.app.view.widgets.SlidingTabLayout;
@@ -99,7 +98,7 @@ public class TradeFragment extends Fragment {
                 bundle.putLong(BundleConstants.TRADE_ID, tradeId);
                 bundle.putBoolean(BundleConstants.LINE_ITEM_DIRECTION, viewPager.getCurrentItem() == 1);
                 bundle.putInt(BundleConstants.SCREEN_ID, DialogScreen.LINE_ITEM_TYPE_DIALOG.getId());
-                LineItemDialogFactory.createDialog(bundle).show(getChildFragmentManager(), "lineItemDialog");
+                DialogsPackage.createDialogFragment(bundle).show(getChildFragmentManager(), "lineItemDialog");
             }
         });
     }
