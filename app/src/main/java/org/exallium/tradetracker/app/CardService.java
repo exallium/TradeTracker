@@ -16,7 +16,7 @@ import org.exallium.tradetracker.app.model.entities.Card;
 import org.exallium.tradetracker.app.model.entities.CardSet;
 import org.exallium.tradetracker.app.model.entities.LineItem;
 import org.exallium.tradetracker.app.model.entities.Trade;
-import org.exallium.tradetracker.app.model.rest.RestServiceManager;
+import org.exallium.tradetracker.app.model.rest.RestManager;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
@@ -35,7 +35,7 @@ public class CardService extends Service {
     private static final String PREFS_REQUIRE_DISK_UPDATE = "org.exallium.tradetracker.app";
     private static final int NOTIFICATION_ID = 1;
 
-    private RestServiceManager restServiceManager;
+    private RestManager restManager;
 
     private class CardJsonObject {
         int multiverseId;
@@ -63,7 +63,7 @@ public class CardService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        restServiceManager = new RestServiceManager(this);
+        restManager = new RestManager(this);
 
         if (getSharedPreferences(MainApplication.PREFERENCES, Context.MODE_PRIVATE).getBoolean(PREFS_REQUIRE_DISK_UPDATE, true))
             doDiskLoad();
@@ -177,7 +177,7 @@ public class CardService extends Service {
                 .setContentText("This might take a while");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        restServiceManager.getCardSetObservable().subscribe(new Subscriber<String>() {
+        restManager.getCardSetObservable().subscribe(new Subscriber<String>() {
 
             @Override
             public void onStart() {
@@ -206,7 +206,7 @@ public class CardService extends Service {
                     builder.setContentTitle(String.format("Downloading Page %d/%d of " + cardSet.code, page, pageCount));
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
 
-                    restServiceManager.getCardsForSetObservable(cardSet, 1).doOnCompleted(new OnCardPageDownloadedAction(cardSet.code, page, pageCount)).subscribe();
+                    restManager.getCardsForSetObservable(cardSet, 1).doOnCompleted(new OnCardPageDownloadedAction(cardSet.code, page, pageCount)).subscribe();
                 } else {
                     request(1);
                 }
@@ -229,7 +229,7 @@ public class CardService extends Service {
                 public void call() {
                     if (page != total) {
                         CardSet cardSet = Select.from(CardSet.class).where(Condition.prop("code").eq(cardSetCode)).first();
-                        restServiceManager.getCardsForSetObservable(cardSet, page).doOnCompleted(new OnCardPageDownloadedAction(cardSetCode, page + 1, total)).subscribe();
+                        restManager.getCardsForSetObservable(cardSet, page).doOnCompleted(new OnCardPageDownloadedAction(cardSetCode, page + 1, total)).subscribe();
                         builder.setContentTitle(String.format("Downloading Page %d/%d of " + cardSetCode, page + 1, total));
                         notificationManager.notify(NOTIFICATION_ID, builder.build());
                     } else {
