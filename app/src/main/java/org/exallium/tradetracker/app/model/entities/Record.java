@@ -12,6 +12,6 @@ public class Record<T> extends SugarRecord<T> {
         // it gets sent down the chain.  The Adapter sees this new item, finds the appropriate position in the view
         // to add it, and notifyAdded at the appropriate location, or notifyModified if this is just a modification
         // (The item already exists in the list)
-        MainApplication.getInstance().onObjectSaved(this);
+        MainApplication.INSTANCE$.getOnObjectSavedSubject().onNext(this);
     }
 }

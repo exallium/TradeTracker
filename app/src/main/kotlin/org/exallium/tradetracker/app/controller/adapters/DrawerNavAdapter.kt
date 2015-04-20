@@ -10,7 +10,7 @@ import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.Screen
 import rx.Subscriber
 
-public class DrawerNavAdapter(private val navItems : Array<Screen>, private val subscriber : Subscriber<Pair<Screen, Bundle?>>) : RecyclerView.Adapter<DrawerNavAdapter.ViewHolder>() {
+public class DrawerNavAdapter(private val navItems : Array<Screen>, private val subscriber : Subscriber<Pair<Screen, Bundle?>>?) : RecyclerView.Adapter<DrawerNavAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.screen = navItems.get(position)
         if (holder.itemView is TextView) {
@@ -28,7 +28,7 @@ public class DrawerNavAdapter(private val navItems : Array<Screen>, private val 
 
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(v: View) {
-            subscriber.onNext(Pair<Screen, Bundle?>(screen, null))
+            subscriber?.onNext(Pair<Screen, Bundle?>(screen, null))
         }
 
         var screen = Screen.NONE

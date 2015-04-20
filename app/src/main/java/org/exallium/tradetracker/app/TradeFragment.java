@@ -98,7 +98,7 @@ public class TradeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putLong(BundleConstants.TRADE_ID, tradeId);
                 bundle.putBoolean(BundleConstants.LINE_ITEM_DIRECTION, viewPager.getCurrentItem() == 1);
-                bundle.putInt(BundleConstants.SCREEN_ID, DialogScreen.LINE_ITEM_TYPE_DIALOG.getId());
+                bundle.putInt(BundleConstants.SCREEN_ID, DialogScreen.LINE_ITEM_TYPE.getId());
                 DialogsPackage.createDialogFragment(bundle).show(getChildFragmentManager(), "lineItemDialog");
             }
         });

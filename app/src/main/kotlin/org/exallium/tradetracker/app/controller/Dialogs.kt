@@ -14,18 +14,18 @@ import org.exallium.tradetracker.app.R
 import rx.android.view.ViewObservable
 
 public enum class DialogScreen(val id: Int) {
-    LINE_ITEM_TYPE_DIALOG: DialogScreen(0)
-    LINE_ITEM_CARD_DIALOG: DialogScreen(1)
-    LINE_ITEM_CASH_DIALOG: DialogScreen(2)
-    LINE_ITEM_MISC_DIALOG: DialogScreen(3)
+    LINE_ITEM_TYPE : DialogScreen(0)
+    LINE_ITEM_CARD : DialogScreen(1)
+    LINE_ITEM_CASH : DialogScreen(2)
+    LINE_ITEM_MISC : DialogScreen(3)
 }
 
 public fun createDialogFragment(bundle : Bundle) : DialogFragment {
     val dialogScreen = DialogScreen.values()[bundle.getInt(BundleConstants.SCREEN_ID)]
     return when (dialogScreen) {
-        DialogScreen.LINE_ITEM_CARD_DIALOG -> createDialogFragment(javaClass<LineItemCardDialog>(), bundle)
-        DialogScreen.LINE_ITEM_CASH_DIALOG -> createDialogFragment(javaClass<LineItemCashDialog>(), bundle)
-        DialogScreen.LINE_ITEM_MISC_DIALOG -> createDialogFragment(javaClass<LineItemMiscDialog>(), bundle)
+        DialogScreen.LINE_ITEM_CARD -> createDialogFragment(javaClass<LineItemCardDialog>(), bundle)
+        DialogScreen.LINE_ITEM_CASH -> createDialogFragment(javaClass<LineItemCashDialog>(), bundle)
+        DialogScreen.LINE_ITEM_MISC -> createDialogFragment(javaClass<LineItemMiscDialog>(), bundle)
         else -> createDialogFragment(javaClass<LineItemTypeDialog>(), bundle)
     }
 
@@ -50,20 +50,20 @@ private class LineItemTypeDialog : DialogFragment() {
     }
 
     public override fun onCreateView(inflater : LayoutInflater, container : ViewGroup, savedInstanceState : Bundle) : View {
-        return inflater.inflate(R.layout.dialog_line_item_type, container, false);
+        return inflater.inflate(R.layout.dialog_line_item_type, container, false)
     }
 
     public override fun onViewCreated(view : View, savedInstanceState : Bundle) {
         ViewObservable.clicks(cardButton).subscribe {
-            onClickEvent -> doWorkflowStep(DialogScreen.LINE_ITEM_CARD_DIALOG)
+            onClickEvent -> doWorkflowStep(DialogScreen.LINE_ITEM_CARD)
         }
 
         ViewObservable.clicks(cashButton).subscribe {
-            onClickEvent -> doWorkflowStep(DialogScreen.LINE_ITEM_CASH_DIALOG)
+            onClickEvent -> doWorkflowStep(DialogScreen.LINE_ITEM_CASH)
         }
 
         ViewObservable.clicks(miscButton).subscribe {
-            onClickEvent -> doWorkflowStep(DialogScreen.LINE_ITEM_MISC_DIALOG)
+            onClickEvent -> doWorkflowStep(DialogScreen.LINE_ITEM_MISC)
         }
     }
 

@@ -27,7 +27,7 @@ public enum Screen {
     }
 
     public String getName() {
-        return MainApplication.getInstance().getString(nameRes);
+        return MainApplication.INSTANCE$.getString(nameRes);
     }
 
     public static Screen getById(int id) {
