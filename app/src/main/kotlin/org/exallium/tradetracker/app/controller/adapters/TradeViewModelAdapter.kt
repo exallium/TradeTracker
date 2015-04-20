@@ -10,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import butterknife.ButterKnife
-import butterknife.InjectView
 import butterknife.bindView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
@@ -81,7 +79,7 @@ public class TradeViewModelAdapter(observable: Observable<TradeViewModel>) : Vie
 
     companion object {
 
-        private val modelComparator = comparator { lhs : TradeViewModel, rhs : TradeViewModel ->  }
+        private val modelComparator = comparator { lhs : TradeViewModel, rhs : TradeViewModel -> lhs.date.compareTo(rhs.date) }
     }
 
 }
