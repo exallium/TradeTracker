@@ -25,7 +25,7 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
     }
 
     private val viewHolder = ViewHolder(formView)
-    private var cachedDate : LocalDate? = LocalDate.now()
+    private var cachedDate : LocalDate = LocalDate.now()
 
     init {
         if (Select.from(javaClass<Person>()).count() != 0L) {
@@ -39,7 +39,10 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
 
         var date = viewHolder.tradeDate.getText()?.toString()?.toLocalDate()
 
-        date?.let { cachedDate = date }
+        date?.let({
+            cachedDate = date as LocalDate
+        })
+
         valid = date != null && valid
 
         return valid
@@ -55,17 +58,17 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
                 person.save()
             }
             entity.person = person
-            entity.tradeDate = cachedDate?.toDate()
+            entity.tradeDate = cachedDate.toDate()
         } else if (entity != null) {
             entity.isTemporary = true
-            entity.tradeDate = cachedDate?.toDate()
+            entity.tradeDate = cachedDate.toDate()
         }
     }
 
     override fun populateEntity(entity: Trade?) {
         if (entity != null) {
             cachedDate = LocalDate.fromDateFields(entity.tradeDate)
-            viewHolder.tradeDate.setText(cachedDate?.printForField())
+            viewHolder.tradeDate.setText(cachedDate.printForField())
             viewHolder.tradePerson.setText(entity.person.name)
         }
     }
