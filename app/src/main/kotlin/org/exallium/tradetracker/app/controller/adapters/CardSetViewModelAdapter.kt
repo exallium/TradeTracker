@@ -13,10 +13,9 @@ import org.exallium.tradetracker.app.Screen
 import org.exallium.tradetracker.app.view.models.CardSetViewModel
 import rx.Observable
 import rx.Subscriber
+import java.util.Comparator
 
-public class CardSetViewModelAdapter(allObjectsObservable: Observable<CardSetViewModel>) : ViewModelAdapter<CardSetViewModel>(allObjectsObservable, CardSetViewModelAdapter.comparator) {
-
-    private var subscriber: Subscriber<Pair<Screen, Bundle>>? = null
+public class CardSetViewModelAdapter(allObjectsObservable: Observable<CardSetViewModel>) : ViewModelAdapter<CardSetViewModel>(allObjectsObservable, CardSetViewModelAdapter.modelComparator) {
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup?): ViewModelAdapter.ViewHolder<CardSetViewModel>? {
         val view = LayoutInflater.from(parent!!.getContext()).inflate(R.layout.support_simple_spinner_dropdown_item, parent, false) as TextView
@@ -50,16 +49,16 @@ public class CardSetViewModelAdapter(allObjectsObservable: Observable<CardSetVie
         }
 
         override fun onClick(v: View) {
-            if (subscriber != null) {
-                val bundle = Bundle()
-                bundle.putString(BundleConstants.CARD_SET, model!!.code)
-                subscriber!!.onNext(Pair(Screen.CARDS, bundle))
-            }
+            val bundle = Bundle()
+            bundle.putString(BundleConstants.CARD_SET, model!!.code)
+            MainApplication.fragmentRequestedSubject.onNext(Pair<Screen, Bundle?>(Screen.CARDS, bundle))
         }
     }
 
     companion object {
-
-        private val comparator = ()
+        val modelComparator = comparator {
+            rhs: CardSetViewModel, lhs: CardSetViewModel ->
+            lhs.name.substring(0, 1).toLowerCase().compareTo(rhs.name.substring(0, 1).toLowerCase())
+        }
     }
 }
