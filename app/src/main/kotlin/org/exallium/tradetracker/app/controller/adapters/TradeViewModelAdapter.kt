@@ -13,10 +13,10 @@ import android.widget.TextView
 import butterknife.bindView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
-import org.exallium.tradetracker.app.BundleConstants
-import org.exallium.tradetracker.app.MainApplication
+import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.R
-import org.exallium.tradetracker.app.Screen
+import org.exallium.tradetracker.app.controller.Screen
 import org.exallium.tradetracker.app.utils.date.DateFormat
 import org.exallium.tradetracker.app.utils.printForDisplay
 import org.exallium.tradetracker.app.view.models.TradeViewModel

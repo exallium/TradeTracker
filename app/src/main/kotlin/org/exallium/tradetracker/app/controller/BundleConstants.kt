@@ -1,4 +1,4 @@
-package org.exallium.tradetracker.app
+package org.exallium.tradetracker.app.controller
 
 public class BundleConstants {
     companion object {

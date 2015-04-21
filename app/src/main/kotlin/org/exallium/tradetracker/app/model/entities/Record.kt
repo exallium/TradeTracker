@@ -1,7 +1,7 @@
 package org.exallium.tradetracker.app.model.entities
 
 import com.orm.SugarRecord
-import org.exallium.tradetracker.app.MainApplication
+import org.exallium.tradetracker.app.controller.MainApplication
 
 public open class Record<T> : SugarRecord<T>() {
 

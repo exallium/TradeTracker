@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import butterknife.ButterKnifeViewHolder
 import butterknife.bindView
-import org.exallium.tradetracker.app.BundleConstants
+import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.R
 import rx.android.view.ViewObservable
 

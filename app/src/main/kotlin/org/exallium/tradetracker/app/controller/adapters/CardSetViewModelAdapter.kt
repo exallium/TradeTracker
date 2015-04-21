@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import org.exallium.tradetracker.app.BundleConstants
-import org.exallium.tradetracker.app.MainApplication
+import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.R
-import org.exallium.tradetracker.app.Screen
+import org.exallium.tradetracker.app.controller.Screen
 import org.exallium.tradetracker.app.view.models.CardSetViewModel
 import rx.Observable
 import rx.Subscriber

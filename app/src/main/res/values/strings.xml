@@ -35,4 +35,9 @@
     <string name="type_card">Card</string>
     <string name="type_cash">Cash</string>
     <string name="type_misc">Other</string>
+
+    <!-- Notifications -->
+    <string name="init_title">Initializing Database</string>
+    <string name="init_subtitle">This may take a while…</string>
+    <string name="download_title">Downloading Page %d/%d of %s</string>
 </resources>

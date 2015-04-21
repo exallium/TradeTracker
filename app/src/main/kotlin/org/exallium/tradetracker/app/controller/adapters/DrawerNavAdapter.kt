@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.exallium.tradetracker.app.R
-import org.exallium.tradetracker.app.Screen
+import org.exallium.tradetracker.app.controller.Screen
 import rx.Subscriber
 
 public class DrawerNavAdapter(private val navItems : Array<Screen>, private val subscriber : Subscriber<Pair<Screen, Bundle?>>?) : RecyclerView.Adapter<DrawerNavAdapter.ViewHolder>() {

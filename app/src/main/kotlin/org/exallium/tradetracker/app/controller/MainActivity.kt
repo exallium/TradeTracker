@@ -1,4 +1,4 @@
-package org.exallium.tradetracker.app
+package org.exallium.tradetracker.app.controller
 
 import android.app.Activity
 import android.os.Bundle
@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import butterknife.bindView
 import com.orm.query.Condition
 import com.orm.query.Select
+import org.exallium.tradetracker.app.*
 import org.exallium.tradetracker.app.controller.adapters.DrawerNavAdapter
 import org.exallium.tradetracker.app.model.entities.Trade
 import rx.Subscriber

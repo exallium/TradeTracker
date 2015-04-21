@@ -1,6 +1,6 @@
-package org.exallium.tradetracker.app
+package org.exallium.tradetracker.app.controller
 
-import android.content.Context
+import org.exallium.tradetracker.app.R
 
 public enum class Screen(public val id: Int, private val nameRes: Int) {
 

@@ -1,4 +1,4 @@
-package org.exallium.tradetracker.app
+package org.exallium.tradetracker.app.controller
 
 import android.app.Activity
 import android.app.Fragment
@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import butterknife.ButterKnife
 import butterknife.bindView
+import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter
 import org.exallium.tradetracker.app.controller.dialogs.DialogScreen
 import org.exallium.tradetracker.app.controller.dialogs.createDialogFragment

@@ -1,4 +1,4 @@
-package org.exallium.tradetracker.app
+package org.exallium.tradetracker.app.controller
 
 import android.content.Intent
 import android.os.Bundle

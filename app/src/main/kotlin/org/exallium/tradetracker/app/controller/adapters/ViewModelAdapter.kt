@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import org.exallium.tradetracker.app.BundleConstants
-import org.exallium.tradetracker.app.MainApplication
-import org.exallium.tradetracker.app.Screen
+import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.controller.MainApplication
+import org.exallium.tradetracker.app.controller.Screen
 import org.exallium.tradetracker.app.model.Observables
 import org.exallium.tradetracker.app.view.models.TradeViewModel
 import org.exallium.tradetracker.app.view.models.ViewModel

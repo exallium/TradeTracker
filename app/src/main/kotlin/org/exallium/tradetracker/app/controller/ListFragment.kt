@@ -1,4 +1,4 @@
-package org.exallium.tradetracker.app
+package org.exallium.tradetracker.app.controller
 
 import android.app.Fragment
 import android.os.Bundle
@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter
 
 public class ListFragment : Fragment() {
