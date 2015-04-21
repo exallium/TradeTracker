@@ -91,7 +91,7 @@ public object Observables {
         if (itemsTradedBuilder.length() > 0)
             itemsTradedBuilder.deleteCharAt(itemsTradedBuilder.length() - 2)
         else
-            itemsTradedBuilder.append(MainApplication.Manager.getInstance()?.getResources()?.getString(R.string.no_line_items_available))
+            itemsTradedBuilder.append(MainApplication.getInstance()?.getResources()?.getString(R.string.no_line_items_available))
 
         TradeViewModel(
                 trade.getId(),

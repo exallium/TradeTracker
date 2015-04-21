@@ -11,13 +11,7 @@ import java.lang.ref.WeakReference
 public class MainApplication : SugarApp() {
 
     init {
-        instance = WeakReference(this)
-    }
-
-    object Manager {
-        public fun getInstance(): MainApplication? {
-            return instance.get()
-        }
+        instance = WeakReference<MainApplication?>(this)
     }
 
     companion object {
@@ -25,6 +19,10 @@ public class MainApplication : SugarApp() {
         public val fragmentRequestedSubject : PublishSubject<Pair<Screen, Bundle?>> = PublishSubject.create()
         public val PREFERENCES : String = "org.exallium.tradetraker.preferences"
         private var instance = WeakReference<MainApplication?>(null)
+
+        public fun getInstance(): MainApplication? {
+            return instance.get()
+        }
     }
 
     public override fun onCreate() {
