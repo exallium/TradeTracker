@@ -6,9 +6,9 @@ import rx.Observable
 
 public trait MtgApiRestService {
 
-    GET("/cards")
-    public fun getCardsForSet(Query("set") setCode: String, Query("page") page: Int): Observable<Map<String, Any>>
+    [GET("/cards")]
+    public fun getCardsForSet([Query("set")] setCode: String, [Query("page")] page: Int): Observable<Map<String, Any>>
 
-    GET("/sets")
+    [GET("/sets")]
     public fun getSets(): Observable<Map<String, Any>>
 }

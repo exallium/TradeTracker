@@ -5,6 +5,6 @@ import retrofit.http.Query
 import rx.Observable
 
 public trait MtgPriceRestService {
-    GET("/cfb/price.json")
-    public fun getPriceInfo(Query("cardname") name: String, Query("cardset") set: String): Observable<List<String>>
+    [GET("/cfb/price.json")]
+    public fun getPriceInfo([Query("cardname")] name: String, [Query("cardset")] set: String?): Observable<List<String>>
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter
+import org.exallium.tradetracker.app.view.models.ViewModel
 
 public class ListFragment : Fragment() {
 
@@ -20,7 +21,7 @@ public class ListFragment : Fragment() {
         val recyclerView = inflater.inflate(R.layout.fragment_list, container, false) as RecyclerView
         linearLayoutManager = LinearLayoutManager(this.getActivity())
         recyclerView.setLayoutManager(linearLayoutManager)
-        val screen = Screen.getById(getArguments().getInt(BundleConstants.SCREEN_ID))
+        val screen = getScreenById(getArguments().getInt(BundleConstants.SCREEN_ID))
         viewModelAdapter = ViewModelAdapter.create(screen, getArguments().getBundle(BundleConstants.BUNDLE_ID))
         recyclerView.setAdapter(viewModelAdapter)
         return recyclerView
@@ -41,7 +42,7 @@ public class ListFragment : Fragment() {
         public fun createInstance(screen: Screen, bundle: Bundle?): ListFragment {
             val arguments = Bundle()
             val fragment = ListFragment()
-            arguments.putInt(BundleConstants.SCREEN_ID, screen.getId())
+            arguments.putInt(BundleConstants.SCREEN_ID, screen.id)
             arguments.putBundle(BundleConstants.BUNDLE_ID, bundle)
             fragment.setArguments(arguments)
             return fragment

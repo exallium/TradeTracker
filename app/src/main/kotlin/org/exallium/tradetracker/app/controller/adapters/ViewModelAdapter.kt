@@ -10,8 +10,6 @@ import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.controller.Screen
 import org.exallium.tradetracker.app.model.Observables
-import org.exallium.tradetracker.app.model.observables.cardSetObservable
-import org.exallium.tradetracker.app.model.observables.getCardSetObservable
 import org.exallium.tradetracker.app.view.models.TradeViewModel
 import org.exallium.tradetracker.app.view.models.ViewModel
 import rx.Observable
@@ -21,7 +19,7 @@ import java.util.Collections
 import java.util.Comparator
 import java.util.TreeSet
 
-public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : Observable<VM>, private val comparator : Comparator<VM>?) : RecyclerView.Adapter<ViewModelAdapter<VM>.ViewHolder>() {
+public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : Observable<VM>, private val comparator : Comparator<VM>?) : RecyclerView.Adapter<ViewModelAdapter.ViewHolder<VM>>() {
 
     override final fun onBindViewHolder(holder: ViewHolder<VM>?, position: Int) {
         holder?.onBind(viewModels.get(position))

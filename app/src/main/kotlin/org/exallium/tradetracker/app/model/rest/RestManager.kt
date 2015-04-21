@@ -66,7 +66,7 @@ public class RestManager(val context: Context) {
     }
 
     public fun getPriceForCardObservable(card: Card): Observable<List<String>> {
-        return mtgPriceRestService.getPriceInfo(card.name, card.cardSet.code)
+        return mtgPriceRestService.getPriceInfo(card.name, card.cardSet?.code)
     }
 
 }

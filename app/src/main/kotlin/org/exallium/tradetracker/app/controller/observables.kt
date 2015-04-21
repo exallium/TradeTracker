@@ -37,7 +37,7 @@ public object Observables {
             }
             subscriber.onCompleted()
         }.map { lineItem ->
-            val description = if (lineItem.card != null) lineItem.card.name else lineItem.description
+            val description = if (lineItem.card != null) lineItem.card?.name else lineItem.description
             LineItemViewModel(description)
         }
     }
@@ -68,7 +68,7 @@ public object Observables {
         val cardIterator = Observable.from(lineItems)
                 .map { lineItem -> lineItem.card }
                 .filter { c -> c != null }
-                .distinct { card1 -> card1.name }
+                .distinct { card1 -> card1?.name }
                 .toBlocking().getIterator();
         val descIterator = Observable.from<LineItem>(lineItems)
                 .map<String> { lineItem -> lineItem.description }
@@ -79,9 +79,9 @@ public object Observables {
         val itemsTradedBuilder = StringBuilder()
 
         for (card in cardIterator) {
-            if (imageUri == null && card.multiverseId != -1)
-                imageUri = Uri.parse("http://gatherer.wizards.com/handlers/image.ashx/?type=card&multiverseid=" + card.multiverseId);
-            itemsTradedBuilder.append("%s [%s], ".format(card.name, card.cardSet.code))
+            if (imageUri == null && card?.multiverseId != -1)
+                imageUri = Uri.parse("http://gatherer.wizards.com/handlers/image.ashx/?type=card&multiverseid=" + card?.multiverseId);
+            itemsTradedBuilder.append("%s [%s], ".format(card?.name, card?.cardSet?.code))
         }
 
         for (desc in descIterator) {
@@ -91,12 +91,12 @@ public object Observables {
         if (itemsTradedBuilder.length() > 0)
             itemsTradedBuilder.deleteCharAt(itemsTradedBuilder.length() - 2)
         else
-            itemsTradedBuilder.append(MainApplication.getResources().getString(R.string.no_line_items_available))
+            itemsTradedBuilder.append(MainApplication.Manager.getInstance()?.getResources()?.getString(R.string.no_line_items_available))
 
         TradeViewModel(
                 trade.getId(),
                 "%c%d".format(if (tradeValue >= 0) '+' else 0, tradeValue),
-                trade.person.name,
+                trade.person?.name,
                 imageUri,
                 lineItems.size(),
                 itemsTradedBuilder.toString(),

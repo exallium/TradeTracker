@@ -71,7 +71,7 @@ public class MainActivity : Activity() {
                     val tradeId = bundle.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT)
                     if (tradeId != BundleConstants.NEW_OBJECT) {
                         val trade = Select.from(javaClass<Trade>()).where(Condition.prop("id").eq(tradeId)).first()
-                        toolbar.setSubtitle(getString(R.string.trade_with, trade.person.name))
+                        toolbar.setSubtitle(getString(R.string.trade_with, trade.person?.name))
                     }
                 }
 

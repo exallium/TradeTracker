@@ -11,7 +11,6 @@ import com.orm.query.Select
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.model.entities.Person
 import org.exallium.tradetracker.app.model.entities.Trade
-import org.exallium.tradetracker.app.utils.date.DateFormat
 import org.exallium.tradetracker.app.utils.printForField
 import org.exallium.tradetracker.app.utils.toLocalDate
 import org.joda.time.LocalDate
@@ -53,7 +52,7 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
             var person = Select.from(javaClass<Person>()).where(Condition.prop("name").eq(name)).first()
             if (person == null) {
                 person = Person()
-                person.name = name
+                person.name = name ?: ""
                 person.save()
             }
             entity.person = person
@@ -68,7 +67,7 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
         if (entity != null) {
             cachedDate = LocalDate.fromDateFields(entity.tradeDate)
             viewHolder.tradeDate.setText(cachedDate.printForField())
-            viewHolder.tradePerson.setText(entity.person.name)
+            viewHolder.tradePerson.setText(entity.person?.name)
         }
     }
 

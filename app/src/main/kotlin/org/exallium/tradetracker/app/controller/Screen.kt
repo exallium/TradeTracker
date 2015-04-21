@@ -13,14 +13,16 @@ public enum class Screen(public val id: Int, private val nameRes: Int) {
     TRADE : Screen(6, R.string.screen_trade)
 
     public fun getName(): String {
-        return Context.getString(nameRes)
+        return MainApplication.Manager.getInstance()?.getString(nameRes)?:""
     }
 
-    public fun getById(id: Int): Screen {
-        for (screen in values()) {
-            if (screen.id == id)
-                return screen
-        }
-        return NONE
+
+}
+
+public fun getScreenById(id: Int): Screen {
+    for (screen in Screen.values()) {
+        if (screen.id == id)
+            return screen
     }
+    return Screen.NONE
 }
