@@ -11,7 +11,7 @@ data class CardViewModel(val name: String, val code: String) : ViewModel()
 data class TradeViewModel(val id: Long,
                           val formattedValue: String,
                           val with: String,
-                          val imagePath: Uri,
+                          val imagePath: Uri?,
                           val lineItemCount: Int,
                           val cardsTraded: String,
                           val date: LocalDate) : ViewModel()

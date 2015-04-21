@@ -10,6 +10,8 @@ import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.controller.Screen
 import org.exallium.tradetracker.app.model.Observables
+import org.exallium.tradetracker.app.model.observables.cardSetObservable
+import org.exallium.tradetracker.app.model.observables.getCardSetObservable
 import org.exallium.tradetracker.app.view.models.TradeViewModel
 import org.exallium.tradetracker.app.view.models.ViewModel
 import rx.Observable
@@ -73,12 +75,12 @@ public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : 
 
         public fun create(screen : Screen, bundle : Bundle?) : ViewModelAdapter<out ViewModel> {
 
-            val cardSetCode = bundle?.getString(BundleConstants.CARD_SET, null)
+            val cardSetCode = if (bundle != null) bundle.getString(BundleConstants.CARD_SET, "") else ""
             val lineItemDirection = if (bundle != null) bundle.getBoolean(BundleConstants.LINE_ITEM_DIRECTION, false) else false
             val tradeId = if (bundle != null) bundle.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT) else BundleConstants.NEW_OBJECT
 
             return when (screen) {
-                Screen.TRADE -> LineItemViewModelAdapter(Observables.getLineItemsObservable(lineItemDirection, tradeId))
+                Screen.TRADE -> LineItemViewModelAdapter(Observables.getLineItemObservable(lineItemDirection, tradeId))
                 Screen.CARD_SETS -> CardSetViewModelAdapter(Observables.getCardSetObservable())
                 Screen.CARDS -> CardViewModelAdapter(Observables.getCardObservable(cardSetCode))
                 else -> TradeViewModelAdapter(Observables.getTradeObservable())
