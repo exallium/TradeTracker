@@ -17,8 +17,8 @@ import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.Screen
-import org.exallium.tradetracker.app.utils.date.DateFormat
 import org.exallium.tradetracker.app.utils.printForDisplay
+import org.exallium.tradetracker.app.view
 import org.exallium.tradetracker.app.view.models.TradeViewModel
 import org.exallium.tradetracker.app.view.transformations.CircleTransformation
 import org.exallium.tradetracker.app.view.transformations.MTGCardCropTransformation
