@@ -35,6 +35,13 @@
     <string name="type_card">Card</string>
     <string name="type_cash">Cash</string>
     <string name="type_misc">Other</string>
+    <string name="card_uuid">Select a Card</string>
+    <string name="card_not_found">Card Not Found</string>
+    <string name="cash_amount">How Much Money?</string>
+    <string name="cash_not_found">Please enter an amount</string>
+    <string name="misc_description">What's being traded?</string>
+    <string name="misc_amount">How Much is it Worth?</string>
+    <string name="misc_not_found">Please enter a description</string>
 
     <!-- Notifications -->
     <string name="init_title">Initializing Database</string>

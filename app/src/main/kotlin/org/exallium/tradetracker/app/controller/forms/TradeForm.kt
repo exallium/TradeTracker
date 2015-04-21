@@ -46,8 +46,8 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
         return valid
     }
 
-    override fun populateFields(entity: Trade?) {
-        if (entity != null && isValid()) {
+    override fun populateFields(entity: Trade) {
+        if (isValid()) {
             var name = viewHolder.tradePerson.getText()?.toString()
             var person = Select.from(javaClass<Person>()).where(Condition.prop("name").eq(name)).first()
             if (person == null) {
@@ -57,18 +57,16 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
             }
             entity.person = person
             entity.tradeDate = cachedDate.toDate()
-        } else if (entity != null) {
+        } else {
             entity.isTemporary = true
             entity.tradeDate = cachedDate.toDate()
         }
     }
 
-    override fun populateEntity(entity: Trade?) {
-        if (entity != null) {
-            cachedDate = LocalDate.fromDateFields(entity.tradeDate)
-            viewHolder.tradeDate.setText(cachedDate.printForField())
-            viewHolder.tradePerson.setText(entity.person?.name)
-        }
+    override fun populateEntity(entity: Trade) {
+        cachedDate = LocalDate.fromDateFields(entity.tradeDate)
+        viewHolder.tradeDate.setText(cachedDate.printForField())
+        viewHolder.tradePerson.setText(entity.person?.name)
     }
 
 }

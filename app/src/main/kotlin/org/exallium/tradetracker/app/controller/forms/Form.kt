@@ -1,5 +1,6 @@
 package org.exallium.tradetracker.app.controller.forms
 
+import android.os.Bundle
 import android.view.View
 import butterknife.ButterKnife
 import butterknife.ButterKnifeViewHolder
@@ -23,16 +24,25 @@ public abstract class Form<E : Record<E>?>(val entityClass : Class<E>) {
     }
 
     public final fun forceSave() {
+        forceSave(null)
+    }
+
+    public final fun forceSave(bundle: Bundle?) {
         if (entity == null)
             createEntity()
         populateEntity(entity)
+        populateEntityFromBundle(entity, bundle)
         entity.save()
     }
 
     public final fun save() : Boolean {
+        return save(null)
+    }
+
+    public final fun save(bundle: Bundle?) : Boolean {
         val isValid = isValid()
         if (isValid)
-            save()
+            forceSave(bundle)
         return isValid
     }
 
@@ -43,7 +53,9 @@ public abstract class Form<E : Record<E>?>(val entityClass : Class<E>) {
     }
 
     public abstract fun isValid() : Boolean
-    protected abstract fun populateFields(entity : E?)
-    protected abstract fun populateEntity(entity : E?)
+    protected abstract fun populateFields(entity : E)
+    protected abstract fun populateEntity(entity : E)
+
+    protected open fun populateEntityFromBundle(entity: E, bundle: Bundle?) {}
 
 }

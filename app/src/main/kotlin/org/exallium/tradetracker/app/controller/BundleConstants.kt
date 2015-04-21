@@ -10,9 +10,5 @@ public class BundleConstants {
         public val CARD_SET: String = "cardSetCode"
         public val LINE_ITEM_DIRECTION: String = "lineItemDirection"
 
-        // Temporary Trade ID for proper creation of line items.  If user does not confirm
-        // Trade creation and validation never successfully passes, trade and any referenced line items
-        // should be destroyed
-        public val TEMP_TRADE_ID: String = "tempTradeId"
     }
 }
