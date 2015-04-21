@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.exallium.tradetracker.app.R
+import org.exallium.tradetracker.app.controller.FlowController
 import org.exallium.tradetracker.app.controller.Screen
 import rx.Subscriber
+import rx.android.view.ViewObservable
 
-public class DrawerNavAdapter(private val navItems : Array<Screen>, private val subscriber : Subscriber<Pair<Screen, Bundle?>>?) : RecyclerView.Adapter<DrawerNavAdapter.ViewHolder>() {
+public class DrawerNavAdapter(private val navItems : Array<Screen>) : RecyclerView.Adapter<DrawerNavAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.screen = navItems.get(position)
         if (holder.itemView is TextView) {
@@ -27,8 +29,13 @@ public class DrawerNavAdapter(private val navItems : Array<Screen>, private val 
     }
 
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
         override fun onClick(v: View) {
-            subscriber?.onNext(Pair<Screen, Bundle?>(screen, null))
+            FlowController.getAppFlow().goTo(Pair<Screen, Bundle?>(screen, null))
         }
 
         var screen = Screen.NONE

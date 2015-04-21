@@ -105,7 +105,7 @@ public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : 
             val prev = if (viewModels.size() == 0) null else viewModels.get(viewModels.lastIndex)
 
             if (comparator != null) {
-                if (prev != null || comparator.compare(prev, t) != 0) {
+                if (prev == null || comparator.compare(prev, t) != 0) {
                     headerPositions.add(viewModels.size())
                     viewModels.add(t)
                 }

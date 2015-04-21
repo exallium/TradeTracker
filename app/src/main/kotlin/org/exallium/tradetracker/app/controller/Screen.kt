@@ -16,7 +16,6 @@ public enum class Screen(public val id: Int, private val nameRes: Int) {
         return MainApplication.getInstance()?.getString(nameRes)?:""
     }
 
-
 }
 
 public fun getScreenById(id: Int): Screen {

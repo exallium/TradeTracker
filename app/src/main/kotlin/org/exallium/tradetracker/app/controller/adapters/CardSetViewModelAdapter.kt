@@ -9,6 +9,7 @@ import android.widget.TextView
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.R
+import org.exallium.tradetracker.app.controller.FlowController
 import org.exallium.tradetracker.app.controller.Screen
 import org.exallium.tradetracker.app.view.models.CardSetViewModel
 import rx.Observable
@@ -51,7 +52,7 @@ public class CardSetViewModelAdapter(allObjectsObservable: Observable<CardSetVie
         override fun onClick(v: View) {
             val bundle = Bundle()
             bundle.putString(BundleConstants.CARD_SET, model!!.code)
-            MainApplication.fragmentRequestedSubject.onNext(Pair<Screen, Bundle?>(Screen.CARDS, bundle))
+            FlowController.getAppFlow().goTo(Pair<Screen, Bundle?>(Screen.CARDS, bundle))
         }
     }
 

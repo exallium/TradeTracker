@@ -33,7 +33,10 @@ import android.widget.TextView
  * The views used as tabs can be customized by calling [.setCustomTabView],
  * providing the layout ID of your custom layout.
  */
-public class SlidingTabLayout(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : HorizontalScrollView(context, attrs, defStyle) {
+public class SlidingTabLayout : HorizontalScrollView {
+
+    constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {}
+    constructor (context: Context, attrs: AttributeSet) : this(context, attrs, 0) {}
 
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with
@@ -63,7 +66,7 @@ public class SlidingTabLayout(context: Context, attrs: AttributeSet? = null, def
 
     private val mTabStrip: SlidingTabStrip
 
-    {
+    init {
 
         // Disable the Scroll Bar
         setHorizontalScrollBarEnabled(false)
@@ -72,7 +75,7 @@ public class SlidingTabLayout(context: Context, attrs: AttributeSet? = null, def
 
         mTitleOffset = (TITLE_OFFSET_DIPS.toFloat() * getResources().getDisplayMetrics().density).toInt()
 
-        mTabStrip = SlidingTabStrip(context)
+        mTabStrip = SlidingTabStrip(getContext())
         addView(mTabStrip, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 

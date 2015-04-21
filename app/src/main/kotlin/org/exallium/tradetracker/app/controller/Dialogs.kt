@@ -43,17 +43,17 @@ private class LineItemTypeDialog : DialogFragment() {
     val cashButton : Button by bindView(R.id.type_cash)
     val miscButton : Button by bindView(R.id.type_misc)
 
-    public override fun onCreateDialog(savedInstance : Bundle) : Dialog {
+    public override fun onCreateDialog(savedInstance : Bundle?) : Dialog {
         val dialog = super.onCreateDialog(savedInstance)
         dialog.setTitle(R.string.type_select)
         return dialog
     }
 
-    public override fun onCreateView(inflater : LayoutInflater, container : ViewGroup, savedInstanceState : Bundle) : View {
+    public override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View {
         return inflater.inflate(R.layout.dialog_line_item_type, container, false)
     }
 
-    public override fun onViewCreated(view : View, savedInstanceState : Bundle) {
+    public override fun onViewCreated(view : View?, savedInstanceState : Bundle?) {
         ViewObservable.clicks(cardButton).subscribe {
             onClickEvent -> doWorkflowStep(DialogScreen.LINE_ITEM_CARD)
         }
@@ -68,7 +68,7 @@ private class LineItemTypeDialog : DialogFragment() {
     }
 
     private fun doWorkflowStep(screen : DialogScreen) {
-        val bundle = getArguments().getBundle(BundleConstants.BUNDLE_ID)
+        val bundle = getArguments()
         bundle.putInt(BundleConstants.SCREEN_ID, screen.id)
         dismiss()
         createDialogFragment(bundle).show(getParentFragment().getChildFragmentManager(), "cardDialog")

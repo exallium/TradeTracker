@@ -6,11 +6,14 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageButton
 import butterknife.bindView
 import com.orm.query.Condition
 import com.orm.query.Select
+import flow.Backstack
+import flow.Flow
 import org.exallium.tradetracker.app.*
 import org.exallium.tradetracker.app.controller.adapters.DrawerNavAdapter
 import org.exallium.tradetracker.app.model.entities.Trade
@@ -18,7 +21,7 @@ import rx.Subscriber
 
 public class MainActivity : Activity() {
 
-    private var currentScreen = Screen.TRADES
+    private var currentScreen = Screen.NONE
 
     val navRecyclerView : RecyclerView by bindView(R.id.left_drawer)
     val drawerContainer : DrawerLayout by bindView(R.id.drawer_container)
@@ -50,13 +53,14 @@ public class MainActivity : Activity() {
             setupFabButton(screen)
             setupToolbar(screen, bundle)
         }
+        drawerContainer.closeDrawer(Gravity.LEFT)
     }
 
     private fun setupFabButton(screen : Screen) {
         when (screen) {
             Screen.TRADES -> {
                 fab.setVisibility(View.VISIBLE)
-                fab.setOnClickListener { MainApplication.fragmentRequestedSubject.onNext(Pair<Screen, Bundle?>(Screen.TRADE, null)) }
+                fab.setOnClickListener { FlowController.getAppFlow().goTo(Pair<Screen, Bundle?>(Screen.TRADE, null)) }
             }
             else -> fab.setVisibility(View.GONE)
         }
@@ -81,7 +85,7 @@ public class MainActivity : Activity() {
     }
 
     public override fun onCreate(savedInstanceState : Bundle?) {
-        super.onCreate(savedInstanceState)
+        super<Activity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         fragmentRequestSubscriber = FragmentRequestSubscriber()
@@ -89,12 +93,21 @@ public class MainActivity : Activity() {
         navRecyclerView.setLayoutManager(LinearLayoutManager(this))
         navRecyclerView.setAdapter(DrawerNavAdapter(Array(2, { i ->
             if (i == 0) Screen.TRADES else Screen.CARD_SETS
-        }), fragmentRequestSubscriber));
+        })));
+
+        showFragment(Screen.TRADES, null)
 
     }
 
     public override fun onDestroy() {
-        super.onDestroy()
+        super<Activity>.onDestroy()
         fragmentRequestSubscriber?.unsubscribe()
+    }
+
+
+
+    public override fun onBackPressed() {
+        if(FlowController.getAppFlow().goBack()) return
+        super<Activity>.onBackPressed()
     }
 }
