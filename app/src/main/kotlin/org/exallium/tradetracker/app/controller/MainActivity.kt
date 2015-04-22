@@ -84,7 +84,7 @@ public class MainActivity : Activity() {
         }
     }
 
-    public override fun onCreate(savedInstanceState : Bundle?) {
+    override fun onCreate(savedInstanceState : Bundle?) {
         super<Activity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -99,14 +99,14 @@ public class MainActivity : Activity() {
 
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super<Activity>.onDestroy()
         fragmentRequestSubscriber?.unsubscribe()
     }
 
 
 
-    public override fun onBackPressed() {
+    override fun onBackPressed() {
         if(FlowController.getAppFlow().goBack()) return
         super<Activity>.onBackPressed()
     }

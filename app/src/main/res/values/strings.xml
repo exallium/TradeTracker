@@ -39,7 +39,7 @@
     <string name="card_not_found">Card Not Found</string>
     <string name="cash_amount">How Much Money?</string>
     <string name="cash_not_found">Please enter an amount</string>
-    <string name="misc_description">What's being traded?</string>
+    <string name="misc_description">What is being traded?</string>
     <string name="misc_amount">How Much is it Worth?</string>
     <string name="misc_not_found">Please enter a description</string>
 
