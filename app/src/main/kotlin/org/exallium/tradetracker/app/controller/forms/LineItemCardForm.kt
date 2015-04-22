@@ -15,7 +15,7 @@ import org.exallium.tradetracker.app.model.entities.Trade
 import org.joda.time.LocalDate
 import java.util.UUID
 
-public class LineItemCardForm(val view: View) : Form<LineItem>(entityClass = javaClass<LineItem>()) {
+public class LineItemCardForm(val view: View) : LineItemForm() {
 
     inner class ViewHolder : ButterKnifeViewHolder(itemView = view) {
         val cardUUID : AutoCompleteTextView by bindView(R.id.card_uuid)
@@ -46,15 +46,4 @@ public class LineItemCardForm(val view: View) : Form<LineItem>(entityClass = jav
         entity.card = card
         entity.lastUpdated = LocalDate.now().toDate()
     }
-
-    override fun populateEntityFromBundle(entity: LineItem, bundle: Bundle?) {
-        entity.direction = bundle?.getBoolean(BundleConstants.LINE_ITEM_DIRECTION, false)?:false
-        val tradeId = bundle?.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT)?:BundleConstants.NEW_OBJECT
-
-        if (tradeId != BundleConstants.NEW_OBJECT) {
-            val trade = Select.from(javaClass<Trade>()).where(Condition.prop("id").eq(tradeId)).first()
-            entity.trade = trade
-        }
-    }
-
 }

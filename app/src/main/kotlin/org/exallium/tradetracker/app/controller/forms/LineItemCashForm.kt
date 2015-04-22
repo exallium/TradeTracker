@@ -1,13 +1,19 @@
 package org.exallium.tradetracker.app.controller.forms
 
+import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import butterknife.ButterKnifeViewHolder
 import butterknife.bindView
+import com.orm.query.Condition
+import com.orm.query.Select
 import org.exallium.tradetracker.app.R
+import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.model.entities.LineItem
+import org.exallium.tradetracker.app.model.entities.Trade
 
-public class LineItemCashForm(val view: View): Form<LineItem>(javaClass<LineItem>()) {
+public class LineItemCashForm(val view: View): LineItemForm() {
 
     inner class ViewHolder : ButterKnifeViewHolder(itemView = view) {
         val cashAmount : EditText by bindView(R.id.cash_amount)
@@ -27,8 +33,8 @@ public class LineItemCashForm(val view: View): Form<LineItem>(javaClass<LineItem
         val valStr = viewHolder.cashAmount.getText().toString()
         if (valStr.length() != 0)
             entity.value = valStr.toLong() * 100
+        entity.description = MainApplication.getInstance()?.getResources()?.getString(
+                R.string.cash_description, viewHolder.cashAmount.getText().toString())
     }
-
-    // Pop from bundle
 
 }
