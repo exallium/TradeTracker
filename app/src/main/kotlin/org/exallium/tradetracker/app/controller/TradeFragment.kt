@@ -149,7 +149,7 @@ public class TradeFragment : Fragment() {
                 tradeId = trade.getId()
             }
 
-            args.putLong(BundleConstants.TRADE_ID, tradeId?:BundleConstants.NEW_OBJECT)
+            args.putLong(BundleConstants.TRADE_ID, tradeId)
             fragment.setArguments(args)
             return fragment
         }

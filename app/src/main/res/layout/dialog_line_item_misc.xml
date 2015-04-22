@@ -6,7 +6,6 @@
     <EditText
         android:hint="@string/misc_description"
         android:id="@+id/misc_description"
-        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <EditText
