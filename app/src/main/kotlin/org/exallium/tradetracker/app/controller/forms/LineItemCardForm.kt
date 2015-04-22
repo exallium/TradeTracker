@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import butterknife.ButterKnifeViewHolder
 import butterknife.bindView
 import com.orm.query.Condition
@@ -21,6 +22,7 @@ public class LineItemCardForm(val view: View) : LineItemForm() {
 
     inner class ViewHolder : ButterKnifeViewHolder(itemView = view) {
         val cardUUID : AutoCompleteTextView by bindView(R.id.card_uuid)
+        val quantity : EditText by bindView(R.id.card_quantity)
     }
 
     val viewHolder = ViewHolder()
@@ -31,7 +33,8 @@ public class LineItemCardForm(val view: View) : LineItemForm() {
     }
 
     override fun isValid(): Boolean {
-        var valid = viewHolder.cardUUID.getText().length() != 0
+        var valid = viewHolder.cardUUID.length() != 0
+        valid = valid && viewHolder.quantity.length() != 0
         if (valid) {
             var uuid = UUID.nameUUIDFromBytes(viewHolder.cardUUID.getText().toString().toByteArray("UTF-8")).toString()
             card = Select.from(javaClass<Card>()).where(Condition.prop("uuid").eq(uuid)).first()
@@ -45,11 +48,12 @@ public class LineItemCardForm(val view: View) : LineItemForm() {
         if (entity.card != null) {
             viewHolder.cardUUID.setText("%s [%s]".format(entity.card?.name, entity.card?.cardSet?.code))
         }
+        viewHolder.quantity.setText(entity.quantity.toString())
     }
 
     override fun populateEntity(entity: LineItem) {
         isValid()
         entity.card = card
-        entity.lastUpdated = LocalDate.now().toDate()
+        entity.quantity = viewHolder.quantity.getText().toString().toLong()
     }
 }

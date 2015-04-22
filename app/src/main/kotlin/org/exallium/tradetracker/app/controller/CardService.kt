@@ -18,6 +18,7 @@ import org.exallium.tradetracker.app.model.entities.CardSet
 import org.exallium.tradetracker.app.model.entities.LineItem
 import org.exallium.tradetracker.app.model.entities.Trade
 import org.exallium.tradetracker.app.model.rest.RestManager
+import org.joda.time.LocalDate
 import rx.Observable
 import rx.Subscriber
 import rx.functions.Action0
@@ -42,6 +43,16 @@ public class CardService : Service() {
                     SugarRecord.deleteAll(javaClass<LineItem>(), "trade = ?", id.toString())
                     SugarRecord.deleteAll(javaClass<Trade>(), "id = ?", id.toString())
                 })
+
+        var updateCutoff = LocalDate.now().minusDays(1)
+        Observable.from(Select.from(javaClass<LineItem>()).where(Condition.prop("card").notEq("NULL"), Condition.prop("last_updated").lt(updateCutoff.toDate().getTime())).list())
+                .filter { lineItem -> if (lineItem.trade?.isTemporary?:true) false else true }
+                .flatMap { lineItem -> restManager.getPriceForCardObservable(lineItem.card as Card) }
+        .subscribe { prices ->
+            Log.d(TAG, prices.toString())
+            // When we actually have price access we'll finish this out...
+
+        }
 
         if (getSharedPreferences(MainApplication.PREFERENCES, Context.MODE_PRIVATE).getBoolean(PREFERENCES_REQUIRE_DISK_UPDATE, true)) {
             doDiskLoad()

@@ -23,7 +23,12 @@ public class LineItemViewModelAdapter(allObjectsObservable: Observable<LineItemV
     private inner class ModelViewHolder(itemView: View) : ViewModelAdapter.ViewHolder<LineItemViewModel>(itemView) {
 
         override fun onBind(viewModel: LineItemViewModel) {
-            (itemView as TextView).setText(viewModel.description)
+            if (viewModel.quantity > 1) {
+                (itemView as TextView).setText("%d %s".format(viewModel.quantity, viewModel.description))
+            } else {
+                (itemView as TextView).setText(viewModel.description)
+            }
+
         }
     }
 

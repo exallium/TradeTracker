@@ -37,6 +37,8 @@
     <string name="type_misc">Other</string>
     <string name="card_title">Trade a Card</string>
     <string name="card_uuid">Select a Card</string>
+    <string name="card_quantity">How many copies?</string>
+    <string name="card_quantity_default">1</string>
     <string name="card_not_found">Card Not Found</string>
     <string name="cash_title">Trade some Cash</string>
     <string name="cash_amount">How Much Money?</string>

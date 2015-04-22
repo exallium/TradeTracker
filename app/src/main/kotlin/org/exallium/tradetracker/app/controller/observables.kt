@@ -31,7 +31,7 @@ public object Observables {
             subscriber.onCompleted()
         }.map { lineItem ->
             val description = if (lineItem.card != null) "%s [%s]".format(lineItem.card?.name, lineItem.card?.cardSet?.code) else lineItem.description
-            LineItemViewModel(description)
+            LineItemViewModel(description, lineItem.quantity)
         }
     }
 
@@ -58,7 +58,7 @@ public object Observables {
         ).map { trade ->
             val lineItems = Select.from(javaClass<LineItem>()).where(Condition.prop("trade").eq(trade.getId())).list()
             val tradeValue = if (lineItems.size() == 0) 0 else Observable.from(lineItems)
-                    .map { item -> item.value }
+                    .map { item -> item.value * item.quantity * (if (item.direction) 1 else -1) }
                     .reduce { item1, item2 -> item1 + item2 }
                     .map { item -> item / 100L }
                     .toBlocking().last()
