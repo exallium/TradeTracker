@@ -2,6 +2,7 @@ package org.exallium.tradetracker.app.controller.forms
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import butterknife.ButterKnifeViewHolder
 import butterknife.bindView
@@ -9,6 +10,7 @@ import com.orm.query.Condition
 import com.orm.query.Select
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.controller.adapters.CardAutoCompleteCursorAdapter
 import org.exallium.tradetracker.app.model.entities.Card
 import org.exallium.tradetracker.app.model.entities.LineItem
 import org.exallium.tradetracker.app.model.entities.Trade
@@ -24,10 +26,14 @@ public class LineItemCardForm(val view: View) : LineItemForm() {
     val viewHolder = ViewHolder()
     var card: Card? = null
 
+    init {
+        viewHolder.cardUUID.setAdapter(CardAutoCompleteCursorAdapter())
+    }
+
     override fun isValid(): Boolean {
         var valid = viewHolder.cardUUID.getText().length() != 0
         if (valid) {
-            var uuid = UUID.nameUUIDFromBytes(viewHolder.cardUUID.getText().toString().toByteArray("UTF-8"))
+            var uuid = UUID.nameUUIDFromBytes(viewHolder.cardUUID.getText().toString().toByteArray("UTF-8")).toString()
             card = Select.from(javaClass<Card>()).where(Condition.prop("uuid").eq(uuid)).first()
             valid = card != null
         }

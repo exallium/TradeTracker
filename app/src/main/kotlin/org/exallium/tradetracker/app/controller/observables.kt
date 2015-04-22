@@ -30,14 +30,14 @@ public object Observables {
         return Observable.create<LineItem> { subscriber ->
             if (tradeId != BundleConstants.NEW_OBJECT) {
                 Select.from(javaClass<LineItem>())
-                        .where(Condition.prop("trade_id").eq(tradeId), Condition.prop("direction").eq(direction))
+                        .where(Condition.prop("trade").eq(tradeId), Condition.prop("direction").eq(if (direction) 1 else 0))
                         .list().forEach { lineItem ->
                     subscriber.onNext(lineItem)
                 }
             }
             subscriber.onCompleted()
         }.map { lineItem ->
-            val description = if (lineItem.card != null) lineItem.card?.name else lineItem.description
+            val description = if (lineItem.card != null) "%s [%s]".format(lineItem.card?.name, lineItem.card?.cardSet?.code) else lineItem.description
             LineItemViewModel(description)
         }
     }
@@ -59,7 +59,7 @@ public object Observables {
     private val tradeViewModelObservable: Observable<TradeViewModel> = Observable.from(
             Select.from(javaClass<Trade>()).where(Condition.prop("is_temporary").eq(false)).orderBy("trade_date").list()
     ).map { trade ->
-        val lineItems = Select.from(javaClass<LineItem>()).where(Condition.prop("trade_id").eq(trade.getId())).list()
+        val lineItems = Select.from(javaClass<LineItem>()).where(Condition.prop("trade").eq(trade.getId())).list()
         val tradeValue = if (lineItems.size() == 0) 0 else Observable.from(lineItems)
                 .map { item -> item.value }
                 .reduce { item1, item2 -> item1 + item2 }

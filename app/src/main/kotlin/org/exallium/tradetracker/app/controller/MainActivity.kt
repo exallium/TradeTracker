@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageButton
 import butterknife.bindView
+import com.orm.SugarRecord
 import com.orm.query.Condition
 import com.orm.query.Select
 import flow.Backstack
@@ -74,7 +75,7 @@ public class MainActivity : Activity() {
                 if (bundle != null) {
                     val tradeId = bundle.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT)
                     if (tradeId != BundleConstants.NEW_OBJECT) {
-                        val trade = Select.from(javaClass<Trade>()).where(Condition.prop("id").eq(tradeId)).first()
+                        val trade = SugarRecord.findById(javaClass<Trade>(), tradeId)
                         toolbar.setSubtitle(getString(R.string.trade_with, trade.person?.name))
                     }
                 }

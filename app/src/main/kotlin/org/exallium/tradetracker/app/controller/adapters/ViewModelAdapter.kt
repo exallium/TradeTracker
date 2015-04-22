@@ -94,7 +94,11 @@ public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : 
 
     private inner class SugarUpdateSubscriber : Subscriber<Any>() {
         override fun onCompleted() { }
-        override fun onNext(t: Any?) { subscribe() }
+
+        override fun onNext(t: Any?) {
+            subscribe()
+        }
+
         override fun onError(e: Throwable?) { Log.d(TAG, "Something Bad Happened", e) }
     }
 

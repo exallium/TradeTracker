@@ -27,7 +27,7 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
 
     init {
         if (Select.from(javaClass<Person>()).count() != 0L) {
-            var people = Select.from(javaClass<Person>()).list().map { person -> person?.name }
+            val people = Select.from(javaClass<Person>()).list().map { person -> person?.name }
             viewHolder.tradePerson.setAdapter(ArrayAdapter<String>(viewHolder.tradePerson.getContext(), R.layout.support_simple_spinner_dropdown_item, people))
         }
     }
@@ -35,7 +35,12 @@ public class TradeForm(formView : View) : Form<Trade>(entityClass = javaClass<Tr
     override fun isValid(): Boolean {
         var valid = viewHolder.tradePerson.getText()?.length() == 0
 
-        var date = viewHolder.tradeDate.getText()?.toString()?.toLocalDate()
+        var date : LocalDate? = null
+        try {
+            date = viewHolder.tradeDate.getText()?.toString()?.toLocalDate()
+        } catch (e : IllegalArgumentException) {
+            // Invalid date
+        }
 
         date?.let({
             cachedDate = date as LocalDate

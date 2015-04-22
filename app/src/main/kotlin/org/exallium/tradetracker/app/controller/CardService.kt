@@ -119,7 +119,7 @@ public class CardService : Service() {
                     card?.cardSet = cardSet
                     card?.name = cardJsonObject.name
                     card?.multiverseId = cardJsonObject.multiverseId
-                    card?.uuid = UUID.nameUUIDFromBytes("%s[%s]".format(cardJsonObject.name, cardJsonObject.set).toByteArray("UTF-8")).toString()
+                    card?.uuid = UUID.nameUUIDFromBytes("%s [%s]".format(cardJsonObject.name, cardJsonObject.set).toByteArray("UTF-8")).toString()
                     cards.add(card)
                 }
             }

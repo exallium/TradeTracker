@@ -1,6 +1,7 @@
 package org.exallium.tradetracker.app.controller.forms
 
 import android.os.Bundle
+import com.orm.SugarRecord
 import com.orm.query.Condition
 import com.orm.query.Select
 import org.exallium.tradetracker.app.controller.BundleConstants
@@ -13,7 +14,7 @@ public abstract class LineItemForm : Form<LineItem>(javaClass<LineItem>()) {
         val tradeId = bundle?.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT)?:BundleConstants.NEW_OBJECT
 
         if (tradeId != BundleConstants.NEW_OBJECT) {
-            val trade = Select.from(javaClass<Trade>()).where(Condition.prop("id").eq(tradeId)).first()
+            val trade = SugarRecord.findById(javaClass<Trade>(), tradeId)
             entity.trade = trade
         }
     }

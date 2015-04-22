@@ -19,7 +19,9 @@ import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter
 import org.exallium.tradetracker.app.controller.dialogs.DialogScreen
 import org.exallium.tradetracker.app.controller.dialogs.createDialogFragment
 import org.exallium.tradetracker.app.controller.forms.TradeForm
+import org.exallium.tradetracker.app.model.entities.Trade
 import org.exallium.tradetracker.app.view.widgets.SlidingTabLayout
+import org.joda.time.LocalDate
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
 
@@ -65,15 +67,8 @@ public class TradeFragment : Fragment() {
         fab = activity?.findViewById(R.id.fab) as ImageButton?
         fab!!.setOnClickListener({
             if (viewPager.getCurrentItem() != 0) {
-                var tradeId = getArguments().getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT);
-                if (tradeId == BundleConstants.NEW_OBJECT) {
-                    tradeForm?.forceSave();
-                    val trade = tradeForm?.getEntity();
-                    tradeId = if (trade != null) trade.getId() else BundleConstants.NEW_OBJECT;
-                }
-
                 var bundle = Bundle();
-                bundle.putLong(BundleConstants.TRADE_ID, tradeId);
+                bundle.putLong(BundleConstants.TRADE_ID, getArguments().getLong(BundleConstants.TRADE_ID));
                 bundle.putBoolean(BundleConstants.LINE_ITEM_DIRECTION, viewPager.getCurrentItem() == 1);
                 bundle.putInt(BundleConstants.SCREEN_ID, DialogScreen.LINE_ITEM_TYPE.id);
                 createDialogFragment(bundle).show(getChildFragmentManager(), "lineItemDialog");
@@ -108,9 +103,7 @@ public class TradeFragment : Fragment() {
                 R.string.trade_tab_details -> {
                     view = LayoutInflater.from(container.getContext()).inflate(R.layout.form_trade, container, false)
                     tradeForm = TradeForm(view)
-                    if (tradeId != BundleConstants.NEW_OBJECT) {
-                        tradeForm!!.initialize(tradeId)
-                    }
+                    tradeForm!!.initialize(tradeId)
                     container.addView(view)
                 }
                 else -> {
@@ -121,8 +114,10 @@ public class TradeFragment : Fragment() {
                     val bundle = Bundle()
                     bundle.putBoolean(BundleConstants.LINE_ITEM_DIRECTION, direction)
                     bundle.putLong(BundleConstants.TRADE_ID, tradeId)
-                    rv.setAdapter(ViewModelAdapter.create(Screen.TRADE, bundle))
+                    val adapter = ViewModelAdapter.create(Screen.TRADE, bundle)
+                    rv.setAdapter(adapter)
                     container.addView(view)
+                    adapter.onResume()
                 }
             }
 
@@ -130,20 +125,31 @@ public class TradeFragment : Fragment() {
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+            if (`object` is RecyclerView) {
+                (`object`.getAdapter() as ViewModelAdapter<*>).onPause();
+            }
+
             container.removeView(`object` as View)
         }
     }
 
     companion object {
 
-        public val createLineItemSubject: Subject<Void, Void> = PublishSubject.create<Void>()
-
         private val TAG = javaClass<TradeFragment>().getSimpleName()
 
         public fun createInstance(bundle: Bundle?): TradeFragment {
             val fragment = TradeFragment()
             val args = Bundle()
-            args.putLong(BundleConstants.TRADE_ID, if (bundle == null) BundleConstants.NEW_OBJECT else bundle.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT))
+            var tradeId = bundle?.getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT)?:BundleConstants.NEW_OBJECT;
+            if (tradeId == BundleConstants.NEW_OBJECT) {
+                val trade = Trade();
+                trade.tradeDate = LocalDate.now().toDate()
+                trade.isTemporary = true
+                trade.save()
+                tradeId = trade.getId()
+            }
+
+            args.putLong(BundleConstants.TRADE_ID, tradeId?:BundleConstants.NEW_OBJECT)
             fragment.setArguments(args)
             return fragment
         }

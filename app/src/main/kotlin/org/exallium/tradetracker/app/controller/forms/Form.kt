@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import butterknife.ButterKnife
 import butterknife.ButterKnifeViewHolder
+import com.orm.SugarRecord
 import com.orm.query.Condition
 import com.orm.query.Select
 import org.exallium.tradetracker.app.model.entities.Record
@@ -13,7 +14,7 @@ public abstract class Form<E : Record<E>?>(val entityClass : Class<E>) {
     private var entity : E = null
 
     public fun initialize(id : Long) : Boolean {
-        entity = Select.from(entityClass).where(Condition.prop("id").eq(id)).first();
+        entity = SugarRecord.findById(entityClass, id)
         return initialize(entity)
     }
 
