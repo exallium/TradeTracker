@@ -35,7 +35,7 @@ public class CardService : Service() {
         super.onCreate()
 
         // Delete Temporary Trades FIRST
-        var temp = Select.from(javaClass<Trade>()).where(Condition.prop("is_temporary").eq(true)).list()
+        var temp = Select.from(javaClass<Trade>()).where(Condition.prop("is_temporary").eq(1)).list()
         Observable.from(temp)
                 .map { trade -> trade.getId() }
                 .forEach({ id ->

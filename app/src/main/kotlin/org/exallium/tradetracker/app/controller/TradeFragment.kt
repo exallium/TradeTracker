@@ -80,6 +80,12 @@ public class TradeFragment : Fragment() {
         super.onDetach()
     }
 
+    override fun onPause() {
+        super.onPause()
+        tradeForm?.save()
+    }
+
+
     private inner class TradePagerAdapter : PagerAdapter() {
 
         private val tabTitles = intArray(R.string.trade_tab_details, R.string.trade_tab_from, R.string.trade_tab_to)
@@ -127,6 +133,8 @@ public class TradeFragment : Fragment() {
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
             if (`object` is RecyclerView) {
                 (`object`.getAdapter() as ViewModelAdapter<*>).onPause();
+            } else {
+                tradeForm?.forceSave()
             }
 
             container.removeView(`object` as View)

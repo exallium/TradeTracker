@@ -16,6 +16,7 @@ import com.squareup.picasso.Transformation
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.R
+import org.exallium.tradetracker.app.controller.FlowController
 import org.exallium.tradetracker.app.controller.Screen
 import org.exallium.tradetracker.app.utils.printForDisplay
 import org.exallium.tradetracker.app.view
@@ -52,6 +53,10 @@ public class TradeViewModelAdapter(observable: Observable<TradeViewModel>) : Vie
 
         private var tradeViewModel: TradeViewModel? = null
 
+        init {
+            itemView.setOnClickListener(this)
+        }
+
         override fun onBind(viewModel: TradeViewModel) {
 
             tradeViewModel = viewModel
@@ -73,7 +78,7 @@ public class TradeViewModelAdapter(observable: Observable<TradeViewModel>) : Vie
             if (tradeViewModel != null) {
                 val bundle = Bundle()
                 bundle.putLong(BundleConstants.TRADE_ID, tradeViewModel!!.id)
-                MainApplication.fragmentRequestedSubject.onNext(Pair<Screen, Bundle?>(Screen.TRADE, bundle))
+                FlowController.getAppFlow().goTo(Pair<Screen, Bundle?>(Screen.TRADE, bundle))
             }
         }
     }
