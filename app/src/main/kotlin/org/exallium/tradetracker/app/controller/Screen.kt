@@ -13,7 +13,7 @@ public enum class Screen(public val id: Int, private val nameRes: Int) {
     TRADE : Screen(6, R.string.screen_trade)
 
     public fun getName(): String {
-        return MainApplication.getInstance()?.getString(nameRes)?:""
+        return MainApplication.instance.get()?.getString(nameRes)?:""
     }
 
 }

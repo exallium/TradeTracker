@@ -33,7 +33,7 @@ public class LineItemCashForm(val view: View): LineItemForm() {
         val valStr = viewHolder.cashAmount.getText().toString()
         if (valStr.length() != 0)
             entity.value = valStr.toLong() * 100
-        entity.description = MainApplication.getInstance()?.getResources()?.getString(
+        entity.description = MainApplication.instance.get()?.getResources()?.getString(
                 R.string.cash_description, viewHolder.cashAmount.getText().toString())
     }
 

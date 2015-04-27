@@ -18,11 +18,9 @@ public class MainApplication : SugarApp() {
         public val onObjectSavedSubject : PublishSubject<Any> = PublishSubject.create()
         public val fragmentRequestedSubject : PublishSubject<Pair<Screen, Bundle?>> = PublishSubject.create()
         public val PREFERENCES : String = "org.exallium.tradetraker.preferences"
-        private var instance = WeakReference<MainApplication?>(null)
 
-        public fun getInstance(): MainApplication? {
-            return instance.get()
-        }
+        public var instance : WeakReference<MainApplication?> = WeakReference(null)
+            private set
     }
 
     public override fun onCreate() {
