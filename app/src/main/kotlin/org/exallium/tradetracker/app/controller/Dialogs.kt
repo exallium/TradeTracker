@@ -21,9 +21,9 @@ import rx.android.view.ViewObservable
 
 public enum class DialogScreen(val id: Int, val rLayout: Int, val rError: Int, val rTitle: Int) {
     LINE_ITEM_TYPE : DialogScreen(0, 0, 0, 0)
-    LINE_ITEM_CARD : DialogScreen(1, R.layout.dialog_line_item_card, R.string.card_not_found, R.string.card_title)
-    LINE_ITEM_CASH : DialogScreen(2, R.layout.dialog_line_item_cash, R.string.cash_not_found, R.string.cash_title)
-    LINE_ITEM_MISC : DialogScreen(3, R.layout.dialog_line_item_misc, R.string.misc_not_found, R.string.misc_title)
+    LINE_ITEM_CARD : DialogScreen(1, R.layout.form_card, R.string.card_not_found, R.string.card_title)
+    LINE_ITEM_CASH : DialogScreen(2, R.layout.form_cash, R.string.cash_not_found, R.string.cash_title)
+    LINE_ITEM_MISC : DialogScreen(3, R.layout.form_misc, R.string.misc_not_found, R.string.misc_title)
 
     companion object {
         public fun getById(id: Int): DialogScreen {
@@ -63,7 +63,7 @@ private class LineItemTypeDialog : DialogFragment() {
     }
 
     public override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View {
-        return inflater.inflate(R.layout.dialog_line_item_type, container, false)
+        return inflater.inflate(R.layout.form_type, container, false)
     }
 
     public override fun onViewCreated(view : View?, savedInstanceState : Bundle?) {
