@@ -81,6 +81,7 @@ public abstract class ViewModelAdapter<VM : ViewModel>(private val observable : 
                 Screen.TRADE -> LineItemViewModelAdapter(Observables.getLineItemObservable(lineItemDirection, tradeId))
                 Screen.CARD_SETS -> CardSetViewModelAdapter(Observables.getCardSetObservable())
                 Screen.CARDS -> CardViewModelAdapter(Observables.getCardObservable(cardSetCode))
+                Screen.PEOPLE -> PersonViewModelAdapter(Observables.getPersonObservable())
                 else -> TradeViewModelAdapter(Observables.getTradeObservable())
             }
         }

@@ -13,6 +13,7 @@ import com.orm.query.Condition
 import com.orm.query.Select
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.controller.adapters.CardAutoCompleteCursorAdapter
 import org.exallium.tradetracker.app.model.entities.*
 import org.exallium.tradetracker.app.utils.printForField
 import org.exallium.tradetracker.app.utils.toLocalDate
@@ -26,7 +27,9 @@ import java.util.Arrays
 import java.util.UUID
 
 public fun createTradeForm(view: TradeFormView, model: Trade?) : Form<*, *> {
-    return Form.Builder<TradeSource, TradeDrain>(TradeSource(view), TradeDrain(model), TradeMapper()).build()
+    return Form.Builder<TradeSource, TradeDrain>(TradeSource(view), TradeDrain(model), TradeMapper())
+            .withDrainExtrasMapper(TradeBundleMapper())
+            .build()
 }
 
 public fun createCardForm(view: CardFormView, model: LineItem?) : Form<*, *> {
@@ -113,6 +116,7 @@ private class TradeSource(view: TradeFormView) : ViewSource<TradeFormView>(view)
 private class CardSource(view: CardFormView) : ViewSource<CardFormView>(view) {
     override fun onSourceCreated(): MutableList<out Validator<out Any?>>? {
         val cardForm = getSource()
+        cardForm.uuid.setAdapter(CardAutoCompleteCursorAdapter())
         return Arrays.asList(EditTextIsCardValidator(cardForm.uuid), EditTextIsNumber(cardForm.quantity))
     }
 }
@@ -147,7 +151,6 @@ private class TradeMapper : Form.Mapper<TradeSource, TradeDrain> {
 
         trade?.person = person
         trade?.tradeDate = tradeForm?.date?.getText().toString().toLocalDate()?.toDate()?:LocalDate.now().toDate()
-
     }
 
     override fun mapBackward(drain: TradeDrain?, source: TradeSource?) {
@@ -172,12 +175,12 @@ private class CardMapper : Form.Mapper<CardSource, LineItemDrain> {
         val view = p0!!.getSource()
         val model = p1!!.getDrain()
 
-        val uuid = UUID.nameUUIDFromBytes(view.uuid.toString().toByteArray("UTF-8")).toString()
+        val uuid = UUID.nameUUIDFromBytes(view.uuid.getText().toString().toByteArray("UTF-8")).toString()
         val card : Card? = Select.from(javaClass<Card>()).where(Condition.prop("uuid").eq(uuid)).first()
 
-        val cachedValueItem = Select.from(javaClass<LineItem>())
-                .where(Condition.prop("card").eq(card?.getId()),
-                        Condition.prop("lastUpdated").lt(LocalDate.now().minusDays(1).toDate().getTime())).first()
+        val cachedValueItem = if (card != null) Select.from(javaClass<LineItem>())
+                .where(Condition.prop("card").eq(card.getId()),
+                       Condition.prop("last_updated").lt(LocalDate.now().minusDays(1).toDate().getTime())).first() else null
 
         model.description = null
         model.card = card
@@ -248,6 +251,18 @@ private class LineItemBundleMapper : Form.Mapper<Bundle, LineItemDrain> {
 
     override fun mapBackward(p0: LineItemDrain?, p1: Bundle?) {
         throw UnsupportedOperationException()
+    }
+
+}
+
+private class TradeBundleMapper : Form.Mapper<Bundle, TradeDrain> {
+    override fun mapBackward(p0: TradeDrain?, p1: Bundle?) {
+        throw UnsupportedOperationException()
+    }
+
+    override fun mapForward(p0: Bundle?, p1: TradeDrain?) {
+        val trade = p1!!.getDrain()
+        trade.isTemporary = p0?.getBoolean(BundleConstants.IS_TEMP, true)?:true
     }
 
 }

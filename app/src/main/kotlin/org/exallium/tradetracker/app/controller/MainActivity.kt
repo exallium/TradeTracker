@@ -92,8 +92,12 @@ public class MainActivity : Activity() {
         fragmentRequestSubscriber = FragmentRequestSubscriber()
         MainApplication.fragmentRequestedSubject.subscribe(fragmentRequestSubscriber)
         navRecyclerView.setLayoutManager(LinearLayoutManager(this))
-        navRecyclerView.setAdapter(DrawerNavAdapter(Array(2, { i ->
-            if (i == 0) Screen.TRADES else Screen.CARD_SETS
+        navRecyclerView.setAdapter(DrawerNavAdapter(Array(3, {
+            when (it) {
+                0 -> Screen.TRADES
+                1 -> Screen.CARD_SETS
+                else -> Screen.PEOPLE
+            }
         })));
 
         showFragment(Screen.TRADES, null)

@@ -22,6 +22,7 @@ public abstract class FormView : LinearLayout {
 
     public fun initView(layoutId: Int) {
         LayoutInflater.from(getContext()).inflate(layoutId, this, true)
+        setOrientation(LinearLayout.VERTICAL)
         postInit()
     }
 
@@ -36,15 +37,16 @@ public class TradeFormView : FormView {
     constructor (context: Context) : super(context, R.layout.form_trade) {}
 
     override fun postInit() {
+        val d = findViewById(R.id.trade_date) as EditText
         val now = LocalDate.now()
-        date.setText(now.printForField())
-        ViewObservable.clicks(date).subscribe {
-            DatePickerDialog(date.getContext(), { datePicker: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+        d.setText(now.printForField())
+        ViewObservable.clicks(d).subscribe {
+            DatePickerDialog(d.getContext(), { datePicker: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val calendar = Calendar.getInstance()
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, monthOfYear)
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                date.setText(LocalDate.fromCalendarFields(calendar).printForField())
+                d.setText(LocalDate.fromCalendarFields(calendar).minusMonths(1).printForField())
             }, now.getYear(), now.getMonthOfYear(), now.getDayOfMonth()).show()
         }
     }

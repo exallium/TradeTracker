@@ -88,7 +88,9 @@ public class TradeFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        tradeForm?.save()
+        val bundle = Bundle()
+        bundle.putBoolean(BundleConstants.IS_TEMP, false)
+        tradeForm?.save(bundle)
     }
 
 

@@ -6,14 +6,8 @@ import com.orm.query.Select
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.controller.MainApplication
-import org.exallium.tradetracker.app.model.entities.Card
-import org.exallium.tradetracker.app.model.entities.CardSet
-import org.exallium.tradetracker.app.model.entities.LineItem
-import org.exallium.tradetracker.app.model.entities.Trade
-import org.exallium.tradetracker.app.view.models.CardSetViewModel
-import org.exallium.tradetracker.app.view.models.CardViewModel
-import org.exallium.tradetracker.app.view.models.LineItemViewModel
-import org.exallium.tradetracker.app.view.models.TradeViewModel
+import org.exallium.tradetracker.app.model.entities.*
+import org.exallium.tradetracker.app.view.models.*
 import org.joda.time.LocalDate
 import rx.Observable
 
@@ -48,6 +42,12 @@ public object Observables {
                 subscriber.onNext(CardSetViewModel(cardSet.code, cardSet.name))
             }
             subscriber.onCompleted()
+        }
+    }
+
+    public fun getPersonObservable(): Observable<PersonViewModel> {
+        return Observable.from(Select.from(javaClass<Person>()).list()).map {
+            person -> PersonViewModel(person.name)
         }
     }
 

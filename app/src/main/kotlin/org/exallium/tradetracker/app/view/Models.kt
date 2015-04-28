@@ -5,6 +5,7 @@ import org.exallium.tradetracker.app.view.models.ViewModel
 import org.joda.time.LocalDate
 
 public abstract class ViewModel()
+data class PersonViewModel(val name: String) : ViewModel()
 data class CardSetViewModel(val code: String, val name: String) : ViewModel()
 data class LineItemViewModel(val description: String?, val quantity: Long) : ViewModel()
 data class CardViewModel(val name: String, val code: String) : ViewModel()

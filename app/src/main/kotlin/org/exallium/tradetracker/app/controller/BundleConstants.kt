@@ -8,6 +8,7 @@ public class BundleConstants {
         public val SCREEN_ID: String = "screenId"
         public val BUNDLE_ID: String = "bundleId"
         public val CARD_SET: String = "cardSetCode"
+        public val IS_TEMP: String = "isTemp"
         public val LINE_ITEM_DIRECTION: String = "lineItemDirection"
 
     }
