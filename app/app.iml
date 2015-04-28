@@ -90,6 +90,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="rxandroid-0.24.0" level="project" />
     <orderEntry type="library" exported="" name="okhttp-urlconnection-2.0.0" level="project" />
+    <orderEntry type="library" exported="" name="app-0.1" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="kotlin-runtime-0.11.91.1" level="project" />

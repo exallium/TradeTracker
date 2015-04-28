@@ -3,6 +3,9 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        maven {
+            url  "http://dl.bintray.com/exallium/maven"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
@@ -16,6 +19,9 @@ apply plugin: 'kotlin-android'
 repositories {
     jcenter()
     mavenCentral()
+    maven {
+        url  "http://dl.bintray.com/exallium/maven"
+    }
 }
 
 android {
@@ -67,4 +73,5 @@ dependencies {
     compile 'com.github.satyan:sugar:1.3'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.squareup.flow:flow:0.8'
+    compile 'com.exallium.AndroidForms:app:0.1@aar'
 }

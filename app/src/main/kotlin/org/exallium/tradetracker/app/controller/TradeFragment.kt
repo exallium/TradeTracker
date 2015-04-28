@@ -13,14 +13,20 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import butterknife.ButterKnife
 import butterknife.bindView
+import com.exallium.AndroidForms.Form
+import com.orm.SugarRecord
+import com.orm.query.Condition
+import com.orm.query.Select
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter
 import org.exallium.tradetracker.app.controller.dialogs.DialogScreen
 import org.exallium.tradetracker.app.controller.dialogs.createDialogFragment
-import org.exallium.tradetracker.app.controller.forms.TradeForm
+import org.exallium.tradetracker.app.controller.forms.createTradeForm
+import org.exallium.tradetracker.app.model.entities.Record
 import org.exallium.tradetracker.app.model.entities.Trade
 import org.exallium.tradetracker.app.view.widgets.SlidingTabLayout
+import org.exallium.tradetracker.app.view.widgets.TradeFormView
 import org.joda.time.LocalDate
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
@@ -30,7 +36,7 @@ public class TradeFragment : Fragment() {
     val viewPager: ViewPager by bindView(R.id.trade_pager)
     val slidingTabLayout: SlidingTabLayout by bindView(R.id.trade_tabs)
 
-    private var tradeForm: TradeForm? = null
+    private var tradeForm: Form<*,*>? = null
 
     var fab: ImageButton? = null
 
@@ -105,11 +111,12 @@ public class TradeFragment : Fragment() {
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val view: View
             val tradeId = getArguments().getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT)
+            val trade = SugarRecord.findById(javaClass<Trade>(), tradeId)
             when (tabTitles[position]) {
                 R.string.trade_tab_details -> {
-                    view = LayoutInflater.from(container.getContext()).inflate(R.layout.form_trade, container, false)
-                    tradeForm = TradeForm(view)
-                    tradeForm!!.initialize(tradeId)
+                    view = TradeFormView(container.getContext())
+                    tradeForm = createTradeForm(view as TradeFormView, trade)
+                    tradeForm?.display()
                     container.addView(view)
                 }
                 else -> {
