@@ -22,7 +22,6 @@ import android.support.v4.app.Fragment as SupportFragment
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.View
 import android.view.ViewGroup
-import org.exallium.tradetracker.app.controller.forms.Form
 import org.exallium.tradetracker.app.model.entities.Record
 import kotlin.properties.ReadOnlyProperty
 

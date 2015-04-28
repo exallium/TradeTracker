@@ -1,6 +1,7 @@
 package org.exallium.tradetracker.app.controller
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import com.orm.SugarApp
 import net.danlew.android.joda.JodaTimeAndroid
@@ -18,9 +19,11 @@ public class MainApplication : SugarApp() {
         public val onObjectSavedSubject : PublishSubject<Any> = PublishSubject.create()
         public val fragmentRequestedSubject : PublishSubject<Pair<Screen, Bundle?>> = PublishSubject.create()
         public val PREFERENCES : String = "org.exallium.tradetraker.preferences"
+        private var instance : WeakReference<MainApplication?> = WeakReference(null)
 
-        public var instance : WeakReference<MainApplication?> = WeakReference(null)
-            private set
+        public fun getResources() : Resources? {
+            return instance.get()?.getResources()
+        }
     }
 
     public override fun onCreate() {

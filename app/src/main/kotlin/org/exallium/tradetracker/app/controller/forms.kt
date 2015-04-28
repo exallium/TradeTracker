@@ -1,14 +1,18 @@
 package org.exallium.tradetracker.app.controller.forms
 
+import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.exallium.AndroidForms.Drain
 import com.exallium.AndroidForms.Form
 import com.exallium.AndroidForms.ViewSource
 import com.exallium.AndroidForms.validators.EditTextNotEmptyValidator
 import com.exallium.AndroidForms.validators.Validator
+import com.orm.SugarRecord
 import com.orm.query.Condition
 import com.orm.query.Select
 import org.exallium.tradetracker.app.R
+import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.model.entities.*
 import org.exallium.tradetracker.app.utils.printForField
 import org.exallium.tradetracker.app.utils.toLocalDate
@@ -17,23 +21,30 @@ import org.exallium.tradetracker.app.view.widgets.CashFormView
 import org.exallium.tradetracker.app.view.widgets.MiscFormView
 import org.exallium.tradetracker.app.view.widgets.TradeFormView
 import org.joda.time.LocalDate
+import java.util
 import java.util.Arrays
 import java.util.UUID
 
-public fun createTradeForm(view: TradeFormView, model: Trade?) : Form<TradeSource, TradeDrain> {
+public fun createTradeForm(view: TradeFormView, model: Trade?) : Form<*, *> {
     return Form.Builder<TradeSource, TradeDrain>(TradeSource(view), TradeDrain(model), TradeMapper()).build()
 }
 
-public fun createCardForm(view: CardFormView, model: LineItem?) : Form<CardSource, LineItemDrain> {
-    return Form.Builder<CardSource, LineItemDrain>(CardSource(view), LineItemDrain(model), CardMapper()).build()
+public fun createCardForm(view: CardFormView, model: LineItem?) : Form<*, *> {
+    return Form.Builder<CardSource, LineItemDrain>(CardSource(view), LineItemDrain(model), CardMapper())
+            .withDrainExtrasMapper(LineItemBundleMapper())
+            .build()
 }
 
-public fun createCashForm(view: CashFormView, model: LineItem?) : Form<CashSource, LineItemDrain> {
-    return Form.Builder<CashSource, LineItemDrain>(CashSource(view), LineItemDrain(model), CashMapper()).build()
+public fun createCashForm(view: CashFormView, model: LineItem?) : Form<*, *> {
+    return Form.Builder<CashSource, LineItemDrain>(CashSource(view), LineItemDrain(model), CashMapper())
+            .withDrainExtrasMapper(LineItemBundleMapper())
+            .build()
 }
 
-public fun createMiscForm(view: MiscFormView, model: LineItem?) : Form<MiscSource, LineItemDrain> {
-    return Form.Builder<MiscSource, LineItemDrain>(MiscSource(view), LineItemDrain(model), MiscMapper()).build()
+public fun createMiscForm(view: MiscFormView, model: LineItem?) : Form<*, *> {
+    return Form.Builder<MiscSource, LineItemDrain>(MiscSource(view), LineItemDrain(model), MiscMapper())
+            .withDrainExtrasMapper(LineItemBundleMapper())
+            .build()
 }
 
 private class EditTextIsDate(editText: EditText) : Validator<EditText>(editText) {
@@ -90,6 +101,11 @@ private class LineItemDrain(lineItem: LineItem?) : RecordDrain<LineItem>(lineIte
 private class TradeSource(view: TradeFormView) : ViewSource<TradeFormView>(view) {
     override fun onSourceCreated(): MutableList<out Validator<out Any?>>? {
         val tradeForm = getSource()
+
+        val people = Select.from(javaClass<Person>()).list().map { person -> person.name }
+        if (people.size() != 0)
+            tradeForm.person.setAdapter(ArrayAdapter(tradeForm.getContext(), R.layout.support_simple_spinner_dropdown_item, people))
+
         return Arrays.asList(EditTextNotEmptyValidator(tradeForm.person), EditTextIsDate(tradeForm.date))
     }
 }
@@ -214,6 +230,24 @@ private class MiscMapper : Form.Mapper<MiscSource, LineItemDrain> {
         model.quantity = 1
         model.lastUpdated = LocalDate.now().toDate()
         model.value = view.amount.getText().toString().toLong() * 100
+    }
+
+}
+
+private class LineItemBundleMapper : Form.Mapper<Bundle, LineItemDrain> {
+    override fun mapForward(p0: Bundle?, p1: LineItemDrain?) {
+        val lineItem = p1!!.getDrain()
+        lineItem.direction = p0?.getBoolean(BundleConstants.LINE_ITEM_DIRECTION)?:false
+        lineItem.trade = null
+        val tradeId = p0?.getLong(BundleConstants.TRADE_ID)?:BundleConstants.NEW_OBJECT
+        if (tradeId != BundleConstants.NEW_OBJECT) {
+            val trade = SugarRecord.findById(javaClass<Trade>(), tradeId)
+            lineItem.trade = trade
+        }
+    }
+
+    override fun mapBackward(p0: LineItemDrain?, p1: Bundle?) {
+        throw UnsupportedOperationException()
     }
 
 }

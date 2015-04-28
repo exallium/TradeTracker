@@ -2,6 +2,7 @@ package org.exallium.tradetracker.app.controller.dialogs
 
 import android.app.Dialog
 import android.app.DialogFragment
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,20 +11,22 @@ import android.widget.Button
 import android.widget.Toast
 import butterknife.ButterKnifeViewHolder
 import butterknife.bindView
+import com.exallium.AndroidForms.Form
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.R
-import org.exallium.tradetracker.app.controller.forms.LineItemCardForm
-import org.exallium.tradetracker.app.controller.forms.LineItemCashForm
-import org.exallium.tradetracker.app.controller.forms.LineItemForm
-import org.exallium.tradetracker.app.controller.forms.LineItemMiscForm
+import org.exallium.tradetracker.app.controller.forms.*
 import org.exallium.tradetracker.app.model.entities.LineItem
+import org.exallium.tradetracker.app.view.widgets.CardFormView
+import org.exallium.tradetracker.app.view.widgets.CashFormView
+import org.exallium.tradetracker.app.view.widgets.MiscFormView
 import rx.android.view.ViewObservable
+import kotlin.reflect.KClass
 
-public enum class DialogScreen(val id: Int, val rLayout: Int, val rError: Int, val rTitle: Int) {
-    LINE_ITEM_TYPE : DialogScreen(0, 0, 0, 0)
-    LINE_ITEM_CARD : DialogScreen(1, R.layout.form_card, R.string.card_not_found, R.string.card_title)
-    LINE_ITEM_CASH : DialogScreen(2, R.layout.form_cash, R.string.cash_not_found, R.string.cash_title)
-    LINE_ITEM_MISC : DialogScreen(3, R.layout.form_misc, R.string.misc_not_found, R.string.misc_title)
+public enum class DialogScreen(val id: Int, val clazz: Class<out View>?, val rError: Int, val rTitle: Int) {
+    LINE_ITEM_TYPE : DialogScreen(0, null, 0, 0)
+    LINE_ITEM_CARD : DialogScreen(1, javaClass<CardFormView>(), R.string.card_not_found, R.string.card_title)
+    LINE_ITEM_CASH : DialogScreen(2, javaClass<CashFormView>(), R.string.cash_not_found, R.string.cash_title)
+    LINE_ITEM_MISC : DialogScreen(3, javaClass<MiscFormView>(), R.string.misc_not_found, R.string.misc_title)
 
     companion object {
         public fun getById(id: Int): DialogScreen {
@@ -101,14 +104,14 @@ private class LineItemDialog: DialogFragment() {
     }
 
     public override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(dialogScreen.rLayout, container, false)
+        return dialogScreen.clazz?.getConstructor(javaClass<Context>())?.newInstance(getActivity())
     }
 
     public override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         if (view != null) {
-            val form = getForm(dialogScreen, view)
+            val form = getForm(view)
             ViewObservable.clicks(confirm).subscribe {
-                if (form.save(getArguments()))
+                if (form != null && form.save(getArguments()))
                     dismiss()
                 else
                     Toast.makeText(getActivity(), dialogScreen.rError, Toast.LENGTH_SHORT).show()
@@ -122,11 +125,12 @@ private class LineItemDialog: DialogFragment() {
     }
 
     companion object {
-        protected fun getForm(dialogScreen: DialogScreen, view: View): LineItemForm {
-            return when (dialogScreen) {
-                DialogScreen.LINE_ITEM_CARD -> LineItemCardForm(view)
-                DialogScreen.LINE_ITEM_CASH -> LineItemCashForm(view)
-                else -> LineItemMiscForm(view)
+        protected fun getForm(view: View): Form<*, *>? {
+            return when (view) {
+                is CardFormView -> createCardForm(view, null)
+                is CashFormView -> createCashForm(view, null)
+                is MiscFormView -> createMiscForm(view, null)
+                else -> null
             }
         }
     }

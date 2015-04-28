@@ -1,12 +1,18 @@
 package org.exallium.tradetracker.app.view.widgets
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.AutoCompleteTextView
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.LinearLayout
 import butterknife.bindView
 import org.exallium.tradetracker.app.R
+import org.exallium.tradetracker.app.utils.printForField
+import org.joda.time.LocalDate
+import rx.android.view.ViewObservable
+import java.util.Calendar
 
 public abstract class FormView : LinearLayout {
 
@@ -16,7 +22,10 @@ public abstract class FormView : LinearLayout {
 
     public fun initView(layoutId: Int) {
         LayoutInflater.from(getContext()).inflate(layoutId, this, true)
+        postInit()
     }
+
+    protected open fun postInit() {}
 }
 
 public class TradeFormView : FormView {
@@ -25,6 +34,20 @@ public class TradeFormView : FormView {
     public val date: EditText by bindView(R.id.trade_date)
 
     constructor (context: Context) : super(context, R.layout.form_trade) {}
+
+    override fun postInit() {
+        val now = LocalDate.now()
+        date.setText(now.printForField())
+        ViewObservable.clicks(date).subscribe {
+            DatePickerDialog(date.getContext(), { datePicker: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, monthOfYear)
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                date.setText(LocalDate.fromCalendarFields(calendar).printForField())
+            }, now.getYear(), now.getMonthOfYear(), now.getDayOfMonth()).show()
+        }
+    }
 
 }
 
