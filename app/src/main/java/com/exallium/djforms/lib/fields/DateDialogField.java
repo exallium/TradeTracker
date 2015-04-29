@@ -21,7 +21,7 @@ public class DateDialogField extends EditTextField {
     private static DateFormat dateFormat = new SimpleDateFormat("MMMMM dd, yyyy", Locale.CANADA);
 
     public DateDialogField() {
-        super();
+        super(null, R.layout.datedialogfield);
     }
 
     public DateDialogField(String name) {
