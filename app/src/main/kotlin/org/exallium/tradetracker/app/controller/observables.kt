@@ -54,7 +54,7 @@ public object Observables {
     public fun getTradeObservable(): Observable<TradeViewModel> {
 
         return Observable.from(
-                Select.from(javaClass<Trade>()).where(Condition.prop("is_temporary").eq(0)).orderBy("trade_date").list()
+                Select.from(javaClass<Trade>()).where(Condition.prop("is_temporary").eq(0)).orderBy("trade_date").list().reverse()
         ).map { trade ->
             val lineItems = Select.from(javaClass<LineItem>()).where(Condition.prop("trade").eq(trade.getId())).list()
             val tradeValue = if (lineItems.size() == 0) 0 else Observable.from(lineItems)

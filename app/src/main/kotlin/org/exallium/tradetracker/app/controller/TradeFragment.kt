@@ -21,7 +21,7 @@ import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter
 import org.exallium.tradetracker.app.controller.dialogs.DialogScreen
 import org.exallium.tradetracker.app.controller.dialogs.createDialogFragment
-import org.exallium.tradetracker.app.controller.forms.TradeForm
+import org.exallium.tradetracker.app.controller.forms.Forms
 import org.exallium.tradetracker.app.model.entities.Record
 import org.exallium.tradetracker.app.model.entities.Trade
 import org.exallium.tradetracker.app.view.widgets.SlidingTabLayout
@@ -34,8 +34,8 @@ public class TradeFragment : Fragment() {
     val viewPager: ViewPager by bindView(R.id.trade_pager)
     val slidingTabLayout: SlidingTabLayout by bindView(R.id.trade_tabs)
 
-    private var tradeForm: TradeForm? = null
-    private val trade: Trade = SugarRecord.findById(javaClass<Trade>(), getArguments().getLong(BundleConstants.TRADE_ID))
+    private var tradeForm: Forms.TradeForm? = null
+    private var trade: Trade? = null
 
     var fab: ImageButton? = null
 
@@ -89,8 +89,8 @@ public class TradeFragment : Fragment() {
         super.onPause()
         tradeForm?.save(trade)
         if (tradeForm?.isFormValid()?:false)
-            trade.isTemporary = false
-        trade.save()
+            trade?.isTemporary = false
+        trade?.save()
     }
 
 
@@ -113,10 +113,10 @@ public class TradeFragment : Fragment() {
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val view: View
             val tradeId = getArguments().getLong(BundleConstants.TRADE_ID, BundleConstants.NEW_OBJECT)
-            val trade = SugarRecord.findById(javaClass<Trade>(), tradeId)
+            var trade = SugarRecord.findById(javaClass<Trade>(), tradeId)
             when (tabTitles[position]) {
                 R.string.trade_tab_details -> {
-                    tradeForm = TradeForm(container.getContext())
+                    tradeForm = Forms.TradeForm(container.getContext())
                     view = tradeForm?.getFormViewGroup() as View
                     container.addView(view)
                 }
@@ -143,11 +143,16 @@ public class TradeFragment : Fragment() {
                 (`object`.getAdapter() as ViewModelAdapter<*>).onPause();
             } else {
                 tradeForm?.save(trade)
-                trade.save()
+                trade?.save()
             }
 
             container.removeView(`object` as View)
         }
+    }
+
+    override public fun setArguments(args: Bundle?) {
+        super.setArguments(args)
+        trade = SugarRecord.findById(javaClass<Trade>(), args?.getLong(BundleConstants.TRADE_ID))
     }
 
     companion object {

@@ -15,7 +15,7 @@ import com.exallium.djforms.lib.DJForm
 import com.orm.SugarRecord
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.R
-import org.exallium.tradetracker.app.controller.forms.*
+import org.exallium.tradetracker.app.controller.forms.Forms
 import org.exallium.tradetracker.app.model.entities.LineItem
 import org.exallium.tradetracker.app.model.entities.Trade
 import rx.android.view.ViewObservable
@@ -23,9 +23,9 @@ import kotlin.reflect.KClass
 
 public enum class DialogScreen(val id: Int, val clazz: Class<out DJForm>?, val rError: Int, val rTitle: Int) {
     LINE_ITEM_TYPE : DialogScreen(0, null, 0, 0)
-    LINE_ITEM_CARD : DialogScreen(1, javaClass<CardForm>(), R.string.card_not_found, R.string.card_title)
-    LINE_ITEM_CASH : DialogScreen(2, javaClass<CashForm>(), R.string.cash_not_found, R.string.cash_title)
-    LINE_ITEM_MISC : DialogScreen(3, javaClass<MiscForm>(), R.string.misc_not_found, R.string.misc_title)
+    LINE_ITEM_CARD : DialogScreen(1, javaClass<Forms.CardForm>(), R.string.card_not_found, R.string.card_title)
+    LINE_ITEM_CASH : DialogScreen(2, javaClass<Forms.CashForm>(), R.string.cash_not_found, R.string.cash_title)
+    LINE_ITEM_MISC : DialogScreen(3, javaClass<Forms.MiscForm>(), R.string.misc_not_found, R.string.misc_title)
 
     companion object {
         public fun getById(id: Int): DialogScreen {

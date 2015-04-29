@@ -10,19 +10,24 @@ public class AutoCompleteTextField<T extends BaseAdapter & Filterable> extends D
 
     private final T adapter;
 
-    public AutoCompleteTextField(String name, int layoutId, T adapter) {
+    public AutoCompleteTextField(T adapter) {
+        super(null, NO_LAYOUT);
         this.adapter = adapter;
     }
 
-
-    @Override
-    protected AutoCompleteTextView createView(Context context) {
-        return null;
+    public AutoCompleteTextField(String name, int layoutId, T adapter) {
+        super(name, layoutId);
+        this.adapter = adapter;
     }
 
     @Override
-    protected void onViewCreated(AutoCompleteTextView view) {
-        view.setAdapter(getAdapter());
+    protected AutoCompleteTextView createView(Context context) {
+        return new AutoCompleteTextView(context);
+    }
+
+    @Override
+    protected void onViewCreated(AutoCompleteTextView view){
+        view.setAdapter(adapter);
     }
 
     @Override
@@ -35,7 +40,4 @@ public class AutoCompleteTextField<T extends BaseAdapter & Filterable> extends D
         return view.getText().toString();
     }
 
-    public T getAdapter() {
-        return adapter;
-    }
 }
