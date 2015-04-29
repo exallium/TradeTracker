@@ -11,15 +11,13 @@ import android.widget.Button
 import android.widget.Toast
 import butterknife.ButterKnifeViewHolder
 import butterknife.bindView
-import com.exallium.AndroidForms.Form
 import com.exallium.djforms.lib.DJForm
+import com.orm.SugarRecord
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.forms.*
 import org.exallium.tradetracker.app.model.entities.LineItem
-import org.exallium.tradetracker.app.view.widgets.CardFormView
-import org.exallium.tradetracker.app.view.widgets.CashFormView
-import org.exallium.tradetracker.app.view.widgets.MiscFormView
+import org.exallium.tradetracker.app.model.entities.Trade
 import rx.android.view.ViewObservable
 import kotlin.reflect.KClass
 
@@ -95,8 +93,9 @@ private class LineItemTypeDialog : DialogFragment() {
 
 private class LineItemDialog: DialogFragment() {
 
-    val confirm : Button by bindView(R.id.dialog_confirm)
+    var submit: View? = null
     var dialogScreen = DialogScreen.LINE_ITEM_MISC
+    var form: DJForm? = null
 
     public override fun onCreateDialog(savedInstance : Bundle?) : Dialog {
         val dialog = super.onCreateDialog(savedInstance)
@@ -105,16 +104,26 @@ private class LineItemDialog: DialogFragment() {
     }
 
     public override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return dialogScreen.clazz?.getConstructor(javaClass<Context>())?.newInstance(getActivity())
+        form = dialogScreen.clazz?.getConstructor(javaClass<Context>())?.newInstance(getActivity())
+        val vg = form?.getFormViewGroup()
+
+        // Insert the submit button into the view heirarchy
+        submit = LayoutInflater.from(vg!!.getContext()).inflate(R.layout.submit, vg, false)
+        vg.addView(submit)
+        return vg
     }
 
     public override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         if (view != null) {
-            val form = getForm(view)
-            ViewObservable.clicks(confirm).subscribe {
-                if (form != null && form.save(getArguments()))
+            ViewObservable.clicks(submit).subscribe {
+                if (form != null && form?.isFormValid()?:false) {
+                    val lineItem = LineItem()
+                    form?.save(lineItem)
+                    lineItem.trade = SugarRecord.findById(javaClass<Trade>(), getArguments().getLong(BundleConstants.TRADE_ID))
+                    lineItem.direction = getArguments().getBoolean(BundleConstants.LINE_ITEM_DIRECTION)
+                    lineItem.save()
                     dismiss()
-                else
+                }else
                     Toast.makeText(getActivity(), dialogScreen.rError, Toast.LENGTH_SHORT).show()
             }
         }
@@ -123,17 +132,6 @@ private class LineItemDialog: DialogFragment() {
     public override fun setArguments(args: Bundle?) {
         super.setArguments(args)
         dialogScreen = DialogScreen.getById(args?.getInt(BundleConstants.SCREEN_ID)?:dialogScreen.id)
-    }
-
-    companion object {
-        protected fun getForm(view: View): Form<*, *>? {
-            return when (view) {
-                is CardFormView -> createCardForm(view, null)
-                is CashFormView -> createCashForm(view, null)
-                is MiscFormView -> createMiscForm(view, null)
-                else -> null
-            }
-        }
     }
 
 }

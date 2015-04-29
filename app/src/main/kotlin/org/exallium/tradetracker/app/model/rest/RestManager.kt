@@ -93,7 +93,7 @@ public class RestManager(val context: Context) {
             })*/
         thread {
             val prods = tcgPlayerRestService.getPriceForCard("MTGFAMILIA", card.cardSet?.name?:"", card.name)
-            Log.d("THREAD", "" + prods.tcgProducts)
+            Log.d("THREAD", "" + prods.product)
         }
     }
 }
