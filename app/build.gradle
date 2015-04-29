@@ -73,7 +73,6 @@ dependencies {
     compile 'com.github.satyan:sugar:1.3'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.squareup.flow:flow:0.8'
-    compile 'com.exallium.AndroidForms:app:0.1@aar'
     compile('org.simpleframework:simple-xml:2.7.+'){
         exclude module: 'stax'
         exclude module: 'stax-api'

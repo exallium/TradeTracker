@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import butterknife.ButterKnife
 import butterknife.bindView
-import com.exallium.AndroidForms.Form
 import com.orm.SugarRecord
 import com.orm.query.Condition
 import com.orm.query.Select
@@ -22,11 +21,10 @@ import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.adapters.ViewModelAdapter
 import org.exallium.tradetracker.app.controller.dialogs.DialogScreen
 import org.exallium.tradetracker.app.controller.dialogs.createDialogFragment
-import org.exallium.tradetracker.app.controller.forms.createTradeForm
+import org.exallium.tradetracker.app.controller.forms.TradeForm
 import org.exallium.tradetracker.app.model.entities.Record
 import org.exallium.tradetracker.app.model.entities.Trade
 import org.exallium.tradetracker.app.view.widgets.SlidingTabLayout
-import org.exallium.tradetracker.app.view.widgets.TradeFormView
 import org.joda.time.LocalDate
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
@@ -36,7 +34,8 @@ public class TradeFragment : Fragment() {
     val viewPager: ViewPager by bindView(R.id.trade_pager)
     val slidingTabLayout: SlidingTabLayout by bindView(R.id.trade_tabs)
 
-    private var tradeForm: Form<*,*>? = null
+    private var tradeForm: TradeForm? = null
+    private val trade: Trade = SugarRecord.findById(javaClass<Trade>(), getArguments().getLong(BundleConstants.TRADE_ID))
 
     var fab: ImageButton? = null
 
@@ -88,9 +87,10 @@ public class TradeFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        val bundle = Bundle()
-        bundle.putBoolean(BundleConstants.IS_TEMP, false)
-        tradeForm?.save(bundle)
+        tradeForm?.save(trade)
+        if (tradeForm?.isFormValid()?:false)
+            trade.isTemporary = false
+        trade.save()
     }
 
 
@@ -116,9 +116,8 @@ public class TradeFragment : Fragment() {
             val trade = SugarRecord.findById(javaClass<Trade>(), tradeId)
             when (tabTitles[position]) {
                 R.string.trade_tab_details -> {
-                    view = TradeFormView(container.getContext())
-                    tradeForm = createTradeForm(view as TradeFormView, trade)
-                    tradeForm?.display()
+                    tradeForm = TradeForm(container.getContext())
+                    view = tradeForm?.getFormViewGroup() as View
                     container.addView(view)
                 }
                 else -> {
@@ -143,7 +142,8 @@ public class TradeFragment : Fragment() {
             if (`object` is RecyclerView) {
                 (`object`.getAdapter() as ViewModelAdapter<*>).onPause();
             } else {
-                tradeForm?.forceSave()
+                tradeForm?.save(trade)
+                trade.save()
             }
 
             container.removeView(`object` as View)

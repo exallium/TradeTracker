@@ -12,6 +12,7 @@ import android.widget.Toast
 import butterknife.ButterKnifeViewHolder
 import butterknife.bindView
 import com.exallium.AndroidForms.Form
+import com.exallium.djforms.lib.DJForm
 import org.exallium.tradetracker.app.controller.BundleConstants
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.forms.*
@@ -22,11 +23,11 @@ import org.exallium.tradetracker.app.view.widgets.MiscFormView
 import rx.android.view.ViewObservable
 import kotlin.reflect.KClass
 
-public enum class DialogScreen(val id: Int, val clazz: Class<out View>?, val rError: Int, val rTitle: Int) {
+public enum class DialogScreen(val id: Int, val clazz: Class<out DJForm>?, val rError: Int, val rTitle: Int) {
     LINE_ITEM_TYPE : DialogScreen(0, null, 0, 0)
-    LINE_ITEM_CARD : DialogScreen(1, javaClass<CardFormView>(), R.string.card_not_found, R.string.card_title)
-    LINE_ITEM_CASH : DialogScreen(2, javaClass<CashFormView>(), R.string.cash_not_found, R.string.cash_title)
-    LINE_ITEM_MISC : DialogScreen(3, javaClass<MiscFormView>(), R.string.misc_not_found, R.string.misc_title)
+    LINE_ITEM_CARD : DialogScreen(1, javaClass<CardForm>(), R.string.card_not_found, R.string.card_title)
+    LINE_ITEM_CASH : DialogScreen(2, javaClass<CashForm>(), R.string.cash_not_found, R.string.cash_title)
+    LINE_ITEM_MISC : DialogScreen(3, javaClass<MiscForm>(), R.string.misc_not_found, R.string.misc_title)
 
     companion object {
         public fun getById(id: Int): DialogScreen {
