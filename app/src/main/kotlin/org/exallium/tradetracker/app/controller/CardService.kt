@@ -30,7 +30,7 @@ import java.util.UUID
 
 public class CardService : Service() {
 
-    private var restManager = RestManager(this)
+    private val restManager = MainApplication.getRestService()
 
     override fun onCreate() {
         super.onCreate()
@@ -43,16 +43,6 @@ public class CardService : Service() {
                     SugarRecord.deleteAll(javaClass<LineItem>(), "trade = ?", id.toString())
                     SugarRecord.deleteAll(javaClass<Trade>(), "id = ?", id.toString())
                 })
-
-        var updateCutoff = LocalDate.now().minusDays(1)
-        Observable.from(Select.from(javaClass<LineItem>()).where(Condition.prop("card").notEq("NULL"), Condition.prop("last_updated").lt(updateCutoff.toDate().getTime())).list())
-                .filter { lineItem -> if (lineItem.trade?.isTemporary?:true) false else true }
-                .flatMap { lineItem -> restManager.getPriceForCardObservable(lineItem.card as Card) }
-        .subscribe { prices ->
-            Log.d(TAG, prices.toString())
-            // When we actually have price access we'll finish this out...
-
-        }
 
         if (getSharedPreferences(MainApplication.PREFERENCES, Context.MODE_PRIVATE).getBoolean(PREFERENCES_REQUIRE_DISK_UPDATE, true)) {
             doDiskLoad()
@@ -165,6 +155,8 @@ public class CardService : Service() {
             .setSmallIcon(R.drawable.ic_launcher)
             .setContentText(getString(R.string.init_subtitle))
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (restManager == null) return
 
         restManager.getCardSetObservable().subscribe(object: Subscriber<String>() {
 

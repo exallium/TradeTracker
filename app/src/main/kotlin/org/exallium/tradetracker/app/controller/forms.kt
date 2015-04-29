@@ -13,6 +13,7 @@ import com.orm.query.Condition
 import com.orm.query.Select
 import org.exallium.tradetracker.app.R
 import org.exallium.tradetracker.app.controller.BundleConstants
+import org.exallium.tradetracker.app.controller.MainApplication
 import org.exallium.tradetracker.app.controller.adapters.CardAutoCompleteCursorAdapter
 import org.exallium.tradetracker.app.model.entities.*
 import org.exallium.tradetracker.app.utils.printForField
@@ -178,15 +179,15 @@ private class CardMapper : Form.Mapper<CardSource, LineItemDrain> {
         val uuid = UUID.nameUUIDFromBytes(view.uuid.getText().toString().toByteArray("UTF-8")).toString()
         val card : Card? = Select.from(javaClass<Card>()).where(Condition.prop("uuid").eq(uuid)).first()
 
-        val cachedValueItem = if (card != null) Select.from(javaClass<LineItem>())
-                .where(Condition.prop("card").eq(card.getId()),
-                       Condition.prop("last_updated").lt(LocalDate.now().minusDays(1).toDate().getTime())).first() else null
+        val tcgItem = if (card != null) Select.from(javaClass<TcgProduct>())
+                .where(Condition.prop("card").eq(card.getId())).first() else null
+        if (tcgItem == null && card != null)
+            MainApplication.getRestService()?.getPriceForCard(card)
 
         model.description = null
         model.card = card
         model.quantity = view.quantity.getText().toString().toLong()
-        model.lastUpdated = if (cachedValueItem != null) cachedValueItem.lastUpdated else LocalDate.now().minusYears(10).toDate()
-        model.value = if (cachedValueItem != null) cachedValueItem.value else 0
+        model.value = if (tcgItem != null) Math.round(tcgItem.mid * 100L).toLong() else 0
 
     }
 
@@ -202,7 +203,6 @@ private class CashMapper : Form.Mapper<CashSource, LineItemDrain> {
         model.description = view.getContext().getResources().getString(R.string.cash_description, amount)
         model.card = null
         model.quantity = 1
-        model.lastUpdated = LocalDate.now().toDate()
         model.value = amount * 100L
     }
 
@@ -231,7 +231,6 @@ private class MiscMapper : Form.Mapper<MiscSource, LineItemDrain> {
         model.description = view.description.getText().toString()
         model.card = null
         model.quantity = 1
-        model.lastUpdated = LocalDate.now().toDate()
         model.value = view.amount.getText().toString().toLong() * 100
     }
 

@@ -8,7 +8,6 @@ public class LineItem : Record<LineItem>() {
     public var card: Card? = null
     public var value: Long = 0
     public var trade: Trade? = null
-    public var lastUpdated: Date = LocalDate.now().minusYears(10).toDate()
     public var direction: Boolean = false
     public var quantity: Long = 1
 }
