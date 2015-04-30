@@ -7,6 +7,7 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import com.orm.SugarRecord
 import com.orm.query.Condition
 import com.orm.query.Select
 import org.exallium.tradetracker.app.R
@@ -39,8 +40,12 @@ public open class AutoCompleteCursorAdapter<E : Record<E>>(val clazz: Class<E>, 
         return currentItems.get(position)
     }
 
+    public open fun getRecord(string: String): E {
+        return SugarRecord.findById(clazz, string.substring(string.indexOf("[") + 1, string.indexOf("]")).toLong())
+    }
+
     public open fun stringify(record: E): String {
-        return "%s[%d]".format(clazz.getName(), record)
+        return "%s[%d]".format(clazz.getName(), record.getId())
     }
 
     override fun getItem(position: Int): String? {

@@ -1,7 +1,6 @@
 package org.exallium.tradetracker.app.controller.forms;
 
 import android.widget.AutoCompleteTextView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import com.exallium.djforms.lib.fields.AutoCompleteTextField;
 import com.exallium.djforms.lib.fields.EditTextField;
@@ -56,7 +55,7 @@ public class Fields {
 
         @Override
         public Object getValue(AutoCompleteTextView view) {
-            return super.getValue(view);
+            return adapter.getRecord(view.getText().toString());
         }
 
         @Override

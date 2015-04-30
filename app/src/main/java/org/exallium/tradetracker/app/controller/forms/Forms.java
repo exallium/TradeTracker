@@ -6,9 +6,12 @@ import com.exallium.djforms.lib.fields.DateDialogField;
 import com.exallium.djforms.lib.fields.EditTextField;
 import com.exallium.djforms.lib.fields.NumberField;
 import org.exallium.tradetracker.app.R;
+import org.exallium.tradetracker.app.controller.MainActivity;
+import org.exallium.tradetracker.app.controller.MainApplication;
 import org.exallium.tradetracker.app.controller.adapters.CardAutoCompleteCursorAdapter;
 import org.exallium.tradetracker.app.controller.adapters.PersonCursorAdapter;
 import org.exallium.tradetracker.app.model.entities.Card;
+import org.exallium.tradetracker.app.model.entities.LineItem;
 import org.exallium.tradetracker.app.model.entities.Person;
 
 public class Forms {
@@ -39,6 +42,15 @@ public class Forms {
 
         public CashForm(Context context) {
             super(context);
+        }
+
+        @Override
+        protected void postSave(Object model) {
+            if (model instanceof LineItem)
+                ((LineItem) model).setDescription(
+                        MainApplication.Companion.getResources().getString(
+                                R.string.cash_description, String.format("%.2f", ((LineItem) model).getValue() / 100f)
+                        ));
         }
     }
 
