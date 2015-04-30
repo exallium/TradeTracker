@@ -1,1 +1,3 @@
 include ':app'
+include ':djforms'
+project(":djforms").projectDir = new File(settingsDir, "../DJForms/lib")

@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../DJForms/DJForms.iml" filepath="$PROJECT_DIR$/../DJForms/DJForms.iml" />
       <module fileurl="file://$PROJECT_DIR$/TradeTracker.iml" filepath="$PROJECT_DIR$/TradeTracker.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../DJForms/lib/djforms.iml" filepath="$PROJECT_DIR$/../DJForms/lib/djforms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../DJForms/lib/lib.iml" filepath="$PROJECT_DIR$/../DJForms/lib/lib.iml" />
     </modules>
   </component>
 </project>

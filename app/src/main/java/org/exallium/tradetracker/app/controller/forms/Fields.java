@@ -23,5 +23,10 @@ public class Fields {
         public Object getValue(EditText view) {
             return Math.round(Double.parseDouble((String) super.getValue(view)) * 100);
         }
+
+        @Override
+        public void setValue(EditText view, Object data) {
+            super.setValue(view, String.format("%0.2f", ((Long) data) / 100f));
+        }
     }
 }

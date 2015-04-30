@@ -118,6 +118,7 @@ public class TradeFragment : Fragment() {
                 R.string.trade_tab_details -> {
                     tradeForm = Forms.TradeForm(container.getContext())
                     view = tradeForm?.getFormViewGroup() as View
+                    tradeForm?.fillViews(trade)
                     container.addView(view)
                 }
                 else -> {
