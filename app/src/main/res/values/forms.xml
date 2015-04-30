@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Form styles to go back into library -->
+    <style name="Form">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="Form.DatePickerField" parent="Form">
+        <item name="android:inputType">date</item>
+        <item name="android:focusable">false</item>
+    </style>
+    <style name="Form.NumberField" parent="Form">
+        <item name="android:inputType">number</item>
+    </style>
+
+    <!-- Custom Form styles for TradeTracker -->
+    <style name="TradePersonAutoComplete">
+        <item name="android:hint">@string/trade_form_label_with</item>
+    </style>
+    <style name="TradeDatePickerField" parent="Form.DatePickerField">
+        <item name="android:hint">@string/trade_form_label_date</item>
+    </style>
+    <style name="LineItemCardAutoComplete">
+        <item name="android:hint">@string/card_uuid</item>
+    </style>
+    <style name="LineItemCardQuantityField" parent="Form.NumberField">
+        <item name="android:hint">@string/card_quantity</item>
+        <item name="android:text">@string/card_quantity_default</item>
+    </style>
+    <style name="LineItemCashAmountField" parent="Form.NumberField">
+        <item name="android:hint">@string/cash_amount</item>
+    </style>
+    <style name="LineItemMiscDescriptionField">
+        <item name="android:hint">@string/misc_description</item>
+    </style>
+    <style name="LineItemMiscValueField" parent="Form.NumberField">
+        <item name="android:hint">@string/misc_amount</item>
+    </style>
+</resources>

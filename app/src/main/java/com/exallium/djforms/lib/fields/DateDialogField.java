@@ -21,11 +21,15 @@ public class DateDialogField extends EditTextField {
     private static DateFormat dateFormat = new SimpleDateFormat("MMMMM dd, yyyy", Locale.CANADA);
 
     public DateDialogField() {
-        super(null, R.layout.datedialogfield);
+        this(null);
     }
 
     public DateDialogField(String name) {
-        super(name, R.layout.datedialogfield);
+        super(name, R.style.Form_DatePickerField);
+    }
+
+    public DateDialogField(String name, int styleId) {
+        super(name, styleId);
     }
 
     @Override

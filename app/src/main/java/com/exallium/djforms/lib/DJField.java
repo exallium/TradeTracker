@@ -1,37 +1,77 @@
 package com.exallium.djforms.lib;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * The Building Blocks for DJForms.
+ * Each form field requires a View class, and optional Layout and Style information.
+ * If you are using a custom layout, you should apply the styles as necessary within
+ * the layout XML file, and simply pass NO_STYLE to the constructors here.
+ *
+ * Style will be ignored if there is a custom layout.
+ *
+ * If there is no custom layout, a view is created based off the style passed.  If
+ * there is no style passed, one is created solely based off the given app context.
  */
 public abstract class DJField<V extends View> {
 
-    public static final int NO_LAYOUT = -1;
+    private static final String TAG = DJField.class.getName();
+    public static final int NO_LAYOUT = -1;     // Specifies we are not using a custom layout
+    public static final int NO_STYLE = -1;      // Specifies we are not using a custom style
 
-    protected int layoutId = NO_LAYOUT;
+    private final int styleId;
+    private final int layoutId;
+    private final Class<V> viewClass;
     private String name;
 
-    public DJField() {
-        this(null, NO_LAYOUT);
+    /**
+     * Default constructor for quick instances
+     * @param viewClass The view class, passed in by the field subclass
+     */
+    public DJField(Class<V> viewClass) {
+        this(viewClass, null, NO_LAYOUT, NO_STYLE);
     }
 
-    public DJField(String name, int layoutId) {
-        this.layoutId = layoutId;
+    /**
+     * Constructor for name only
+     * @param viewClass The view class, passed in by the Field subclass
+     * @param name The name mapping for the model this field will be written into, or null
+     */
+    public DJField(Class<V> viewClass, String name) {
+        this(viewClass, name, NO_LAYOUT, NO_STYLE);
+    }
+
+    /**
+     * Create an instance of a Field, more common use case.
+     * @param viewClass The view class, passed in by the Field subclass
+     * @param name The name mapping for the model this field will be written into, or null
+     * @param styleId Custom style id or NO_STYLE
+     */
+    public DJField(Class<V> viewClass, String name, int styleId) {
+        this(viewClass, name, NO_LAYOUT, styleId);
+    }
+
+    /**
+     * Create an instance of a Field
+     * @param viewClass The view class passed in by the Field subclass
+     * @param name The name mapping for the model field this will be written into, or null
+     * @param layoutId Custom layout id or NO_LAYOUT
+     * @param styleId Custom style id or NO_STYLE
+     */
+    public DJField(Class<V> viewClass, String name, int layoutId, int styleId) {
+        this.viewClass = viewClass;
         this.name = name;
+        this.layoutId = layoutId;
+        this.styleId = styleId;
     }
 
     private V cachedView;
-
-    /**
-     * Creates an instance of V, sets it up, and returns it.
-     * Initialization should happen in onViewCreated, not here.
-     * @param context The context for which to generate the view for
-     * @return The View for this field
-     */
-    protected abstract V createView(Context context);
 
     /**
      * Initialize the view with listeners, etc.
@@ -41,12 +81,29 @@ public abstract class DJField<V extends View> {
 
     @SuppressWarnings({"unchecked"})
     private V createFieldView(Context context) {
+        V view = null;
         if (layoutId != NO_LAYOUT) {
-            V view = (V) LayoutInflater.from(context).inflate(layoutId, null);
-            onViewCreated(view);
-            return view;
+            view = (V) LayoutInflater.from(context).inflate(layoutId, null);
+        } else {
+            try {
+                if (styleId != NO_STYLE)
+                    view = viewClass.getConstructor(Context.class, AttributeSet.class, Integer.class).newInstance(context, null, styleId);
+                else
+                    view = viewClass.getConstructor(Context.class).newInstance(context);
+            } catch (InstantiationException e) {
+                Log.e(TAG, "Failed to Instantiate View", e);
+            } catch (IllegalAccessException e) {
+                Log.e(TAG, "Illegal Access Occurred", e);
+            } catch (InvocationTargetException e) {
+                Log.e(TAG, "Invocation Failure", e);
+            } catch (NoSuchMethodException e) {
+                Log.e(TAG, "No Such Method Exists, did you create the right constructors?", e);
+            }
         }
-        V view = createView(context);
+
+        if (view == null)
+            throw new IllegalStateException("View object failed to be created");
+
         onViewCreated(view);
         return view;
     }

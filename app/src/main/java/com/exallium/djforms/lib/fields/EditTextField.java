@@ -4,29 +4,20 @@ import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
 import com.exallium.djforms.lib.DJField;
+import kotlin.properties.NULL_VALUE;
 
 public class EditTextField extends DJField<EditText> {
 
     public EditTextField() {
-        super();
+        super(EditText.class);
     }
 
     public EditTextField(String name) {
-        this(name, NO_LAYOUT);
+        this(name, NO_STYLE);
     }
 
-    public EditTextField(String name, int layoutId) {
-        super(name, layoutId);
-    }
-
-    /**
-     * Creates a new EditText object.  Only called if NO_LAYOUT is supplied to super
-     * @param context The context for which to generate the view for
-     * @return The new instance
-     */
-    @Override
-    protected EditText createView(Context context) {
-        return new EditText(context);
+    public EditTextField(String name, int styleId) {
+        super(EditText.class, name, styleId);
     }
 
     /**

@@ -11,18 +11,17 @@ public class AutoCompleteTextField<T extends BaseAdapter & Filterable> extends D
     private final T adapter;
 
     public AutoCompleteTextField(T adapter) {
-        super(null, NO_LAYOUT);
+        super(AutoCompleteTextView.class, null, NO_STYLE);
         this.adapter = adapter;
     }
 
-    public AutoCompleteTextField(String name, int layoutId, T adapter) {
-        super(name, layoutId);
-        this.adapter = adapter;
+    public AutoCompleteTextField(int styleId, T adapter) {
+        this(null, styleId, adapter);
     }
 
-    @Override
-    protected AutoCompleteTextView createView(Context context) {
-        return new AutoCompleteTextView(context);
+    public AutoCompleteTextField(String name, int styleId, T adapter) {
+        super(AutoCompleteTextView.class, name, styleId);
+        this.adapter = adapter;
     }
 
     @Override

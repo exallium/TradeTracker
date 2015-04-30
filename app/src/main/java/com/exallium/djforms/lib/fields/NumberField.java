@@ -10,13 +10,12 @@ public class NumberField extends EditTextField {
     }
 
     public NumberField(String name) {
-        this(name, R.layout.numberfield);
+        this(name, R.style.Form_NumberField);
     }
 
-    public NumberField(String name, int layoutId) {
-        super(name, layoutId);
+    public NumberField(String name, int styleId) {
+        super(name, styleId);
     }
-
 
     @Override
     public Object getValue(EditText view) {

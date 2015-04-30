@@ -12,11 +12,11 @@ public class Fields {
         }
 
         public ValueField(String name) {
-            this(name, R.layout.numberfield);
+            this(name, R.style.Form_NumberField);
         }
 
-        public ValueField(String name, int layoutId) {
-            super(name, layoutId);
+        public ValueField(String name, int styleId) {
+            super(name, styleId);
         }
 
         @Override
