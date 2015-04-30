@@ -2,19 +2,20 @@ package org.exallium.tradetracker.app.controller.forms;
 
 import android.content.Context;
 import com.exallium.djforms.lib.DJForm;
-import com.exallium.djforms.lib.fields.AutoCompleteTextField;
 import com.exallium.djforms.lib.fields.DateDialogField;
 import com.exallium.djforms.lib.fields.EditTextField;
 import com.exallium.djforms.lib.fields.NumberField;
 import org.exallium.tradetracker.app.R;
 import org.exallium.tradetracker.app.controller.adapters.CardAutoCompleteCursorAdapter;
 import org.exallium.tradetracker.app.controller.adapters.PersonCursorAdapter;
+import org.exallium.tradetracker.app.model.entities.Card;
+import org.exallium.tradetracker.app.model.entities.Person;
 
 public class Forms {
 
     public static class TradeForm extends DJForm {
 
-        public AutoCompleteTextField<PersonCursorAdapter> person = new AutoCompleteTextField<>(R.style.TradePersonAutoComplete, new PersonCursorAdapter());
+        public Fields.AutoCompleteRecordField<Person, PersonCursorAdapter> person = new Fields.AutoCompleteRecordField<>(R.style.TradePersonAutoComplete, new PersonCursorAdapter());
         public DateDialogField tradeDate = new DateDialogField(null, R.style.TradeDatePickerField);
 
         public TradeForm(Context context) {
@@ -24,7 +25,7 @@ public class Forms {
 
     public static class CardForm extends DJForm {
 
-        public AutoCompleteTextField<CardAutoCompleteCursorAdapter> card = new AutoCompleteTextField<>(R.style.LineItemCardAutoComplete, new CardAutoCompleteCursorAdapter());
+        public Fields.AutoCompleteRecordField<Card, CardAutoCompleteCursorAdapter> card = new Fields.AutoCompleteRecordField<>(R.style.LineItemCardAutoComplete, new CardAutoCompleteCursorAdapter());
         public NumberField quantity = new NumberField(null, R.style.LineItemCardQuantityField);
 
         public CardForm(Context context) {

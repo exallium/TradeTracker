@@ -39,8 +39,12 @@ public open class AutoCompleteCursorAdapter<E : Record<E>>(val clazz: Class<E>, 
         return currentItems.get(position)
     }
 
+    public open fun stringify(record: E): String {
+        return "%s[%d]".format(clazz.getName(), record)
+    }
+
     override fun getItem(position: Int): String? {
-        return "%s[%d]".format(clazz.getName(), getRecord(position))
+        return stringify(getRecord(position))
     }
 
     override fun getItemId(position: Int): Long {

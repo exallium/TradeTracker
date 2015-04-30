@@ -13,8 +13,7 @@ import org.exallium.tradetracker.app.model.entities.Card
 import java.util.ArrayList
 
 public class CardAutoCompleteCursorAdapter : AutoCompleteCursorAdapter<Card>(javaClass<Card>(), "name") {
-    override fun getItem(position: Int): String? {
-        val card = getRecord(position)
-        return "%s [%s]".format(card.name, card.cardSet?.code)
+    override fun stringify(record: Card): String {
+        return "%s [%s]".format(record.name, record.cardSet?.code)
     }
 }
